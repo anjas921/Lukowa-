@@ -1,0 +1,19 @@
+# Example data
+returns <- c(0.05, 0.03, 0.02, -0.01, 0.04)
+risk_free_rate <- c(0.01, 0.02, 0.03, 0.04, 0.05)
+years <- c(2017, 2018, 2019, 2020, 2021)
+
+# Aggregate returns and risk-free rates on a yearly basis
+returns_yearly <- tapply(returns, format(as.Date(paste0(years, "-01-01")), "%Y"), mean)
+risk_free_rate_yearly <- tapply(risk_free_rate, format(as.Date(paste0(years, "-01-01")), "%Y"), mean)
+
+# Calculate excess returns
+excess_returns_yearly <- returns_yearly - risk_free_rate_yearly
+
+# Calculate standard deviation of excess returns
+sd_excess_returns_yearly <- sd(excess_returns_yearly)
+
+# Calculate Sharpe ratio on a yearly basis
+sharpe_ratio_yearly <- mean(excess_returns_yearly) / sd_excess_returns_yearly
+
+sharpe_ratio_yearly
