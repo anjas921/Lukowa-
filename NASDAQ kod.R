@@ -42,6 +42,21 @@ for(i in 2:nrow(NASDAQ)){
   NASDAQ$LogReturn_Last[i]<-log(NASDAQ$Last[i]/NASDAQ$Last[i-1])
 }
 
+#CIST PRINOS
+# DNEVNI NET RETURN (cisti prinos)
+#prvo moraju da se naprave kolone u dataframe-u
+NASDAQ$NetReturn_Open<-0
+NASDAQ$NetReturn_High<-0
+NASDAQ$NetReturn_Low<-0
+NASDAQ$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(NASDAQ)){
+  NASDAQ$NetReturn_Open[i]<-(NASDAQ$Open[i]-NASDAQ$Open[i-1])/NASDAQ$Open[i-1]
+  NASDAQ$NetReturn_High[i]<-(NASDAQ$High[i]-NASDAQ$High[i-1])/NASDAQ$High[i-1]
+  NASDAQ$NetReturn_Low[i]<-(NASDAQ$Low[i]-NASDAQ$Low[i-1])/NASDAQ$Low[i-1]
+  NASDAQ$NetReturn_Last[i]<-(NASDAQ$Last[i]-NASDAQ$Last[i-1])/NASDAQ$Last[i-1]
+}
 # ///////////////////////////
 
 # grupisanje podataka po nedeljama
@@ -89,6 +104,20 @@ for(i in 2:nrow(NASDAQ_weekly)){
   NASDAQ_weekly$LogReturn_Close[i]<-log(NASDAQ_weekly$weekly_close[i]/NASDAQ_weekly$weekly_close[i-1])
 }
 
+#nedeljni prinos
+
+NASDAQ_weekly$NetReturn_Open<-0
+NASDAQ_weekly$NetReturn_High<-0
+NASDAQ_weekly$NetReturn_Low<-0
+NASDAQ_weekly$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(NASDAQ_weekly)){
+  NASDAQ_weekly$NetReturn_Open[i]<-(NASDAQ_weekly$weekly_open[i]-NASDAQ_weekly$weekly_open[i-1])/NASDAQ_weekly$weekly_open[i-1]
+  NASDAQ_weekly$NetReturn_High[i]<-(NASDAQ_weekly$weekly_high[i]-NASDAQ_weekly$weekly_high[i-1])/NASDAQ_weekly$weekly_high[i-1]
+  NASDAQ_weekly$NetReturn_Low[i]<-(NASDAQ_weekly$weekly_low[i]-NASDAQ_weekly$weekly_low[i-1])/NASDAQ_weekly$weekly_low[i-1]
+  NASDAQ_weekly$NetReturn_Last[i]<-(NASDAQ_weekly$weekly_close[i]-NASDAQ_weekly$weekly_close[i-1])/NASDAQ_weekly$weekly_close[i-1]
+}
 # ///////////////////////////
 
 # Ucitaj pakete
@@ -134,6 +163,46 @@ for(i in 2:nrow(NASDAQ_monthly)){
   NASDAQ_monthly$LogReturn_Close[i]<-log(NASDAQ_monthly$monthly_close[i]/NASDAQ_monthly$monthly_close[i-1])
 }
 
+## MESECNI NET RETURN (cisti prinos)
+
+#prvo moraju da se naprave kolone u dataframe-u
+NASDAQ_monthly$NetReturn_Open<-0
+NASDAQ_monthly$NetReturn_High<-0
+NASDAQ_monthly$NetReturn_Low<-0
+NASDAQ_monthly$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(NASDAQ_monthly)){
+  NASDAQ_monthly$NetReturn_Open[i]<-(NASDAQ_monthly$monthly_open[i]-NASDAQ_monthly$monthly_open[i-1])/NASDAQ_monthly$monthly_open[i-1]
+  NASDAQ_monthly$NetReturn_High[i]<-(NASDAQ_monthly$monthly_high[i]-NASDAQ_monthly$monthly_high[i-1])/NASDAQ_monthly$monthly_high[i-1]
+  NASDAQ_monthly$NetReturn_Low[i]<-(NASDAQ_monthly$monthly_low[i]-NASDAQ_monthly$monthly_low[i-1])/NASDAQ_monthly$monthly_low[i-1]
+  NASDAQ_monthly$NetReturn_Last[i]<-(NASDAQ_monthly$monthly_close[i]-NASDAQ_monthly$monthly_close[i-1])/NASDAQ_monthly$monthly_close[i-1]
+}
+
+#GODISNJI CIST PRINOS
+#prvo moraju da se naprave kolone u dataframe-u
+NASDAQ_yearly$NetReturn_Open<-0
+NASDAQ_yearly$NetReturn_High<-0
+NASDAQ_yearly$NetReturn_Low<-0
+NASDAQ_yearly$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(NASDAQ_yearly)){
+  NASDAQ_yearly$NetReturn_Open[i]<-(NASDAQ_yearly$yearly_open[i]-NASDAQ_yearly$yearly_open[i-1])/NASDAQ_yearly$yearly_open[i-1]
+  NASDAQ_yearly$NetReturn_High[i]<-(NASDAQ_yearly$yearly_high[i]-NASDAQ_yearly$yearly_high[i-1])/NASDAQ_yearly$yearly_high[i-1]
+  NASDAQ_yearly$NetReturn_Low[i]<-(NASDAQ_yearly$yearly_low[i]-NASDAQ_yearly$yearly_low[i-1])/NASDAQ_yearly$yearly_low[i-1]
+  NASDAQ_yearly$NetReturn_Last[i]<-(NASDAQ_yearly$yearly_close[i]-NASDAQ_yearly$yearly_close[i-1])/NASDAQ_yearly$yearly_close[i-1]
+}
+
+#net returns ukupno od godisnjeg, VOLATILNOST PRINOSA
+NASDAQ_yearly$NetReturns_Open_UK <- "/"
+NASDAQ_yearly$NetReturns_Open_UK[1] <- sd(NASDAQ_yearly$NetReturn_Open)
+NASDAQ_yearly$NetReturns_High_UK <- "/"
+NASDAQ_yearly$NetReturns_High_UK[1] <- sd(NASDAQ_yearly$NetReturn_High)
+NASDAQ_yearly$NetReturns_Low_UK<- "/"
+NASDAQ_yearly$NetReturns_Low_UK[1] <- sd(NASDAQ_yearly$NetReturn_Low)
+NASDAQ_yearly$NetReturns_Last_UK<- "/"
+NASDAQ_yearly$NetReturns_Last_UK[1] <- sd(NASDAQ_yearly$NetReturn_Last)
 # ///////////////////////////
 
 # Ucitaj pakete
@@ -337,20 +406,79 @@ NASDAQ$MA252 <- rollmean(NASDAQ$Last, k = 252, fill = NA)
 
 ggplot(NASDAQ, aes(x = Date, y = Last,group = 1)) + geom_line() + labs(x = "Date", y = "Price", title = "Raw Prices")
 
+
+#------------------
 ggplot(NASDAQ, aes(x = Date, y = Last,group = 1)) +
   geom_line() +
-  geom_line(aes(y = MA5,group = 1), color = "blue", linetype = "dashed") +
-  geom_line(aes(y = MA21,group = 1), color = "green", linetype = "dashed") +
-  geom_line(aes(y = MA63,group = 1), color = "red", linetype = "dashed") +
-  geom_line(aes(y = MA126,group = 1), color = "yellow", linetype = "dashed") +
-  geom_line(aes(y = MA252,group = 1), color = "magenta", linetype = "dashed") +
+  geom_line(aes(y = MA5,group = 1), color = "blue", linetype = "solid") +
+  geom_line(aes(y = MA21,group = 1), color = "green", linetype = "solid") +
+  geom_line(aes(y = MA63,group = 1), color = "red", linetype = "solid") +
+  geom_line(aes(y = MA126,group = 1), color = "yellow", linetype = "solid") +
+  geom_line(aes(y = MA252,group = 1), color = "magenta", linetype = "solid") +
   labs(x = "Date", y = "Price", title = "Moving Averages") +
   scale_linetype_manual(values = c("solid", "dashed", "dotted"))
+
 
 #--------------------------------------------------------------------------------------------------------------
 # Using all the gathered information from descriptive measures, returns and moving averages,
 # rating companies based on price levels of their stock
 #--------------------------------------------------------------------------------------------------------------
+
+# prinose (i log i net) iscrtati na line grafiku sa 5 podgrafika:
+# prinos open cene
+# prinos high
+# prinos low
+# prinos close
+# prinos candlestick (OVAJ DEO NE MOZE DA SE URADI, NE MOGU DA NADJEM NACIN DA SPOJIM LINECHART SA CANDLESTICK CHARTOM)
+
+#DNEVNI
+# Grafikon (Log Return)
+plot(NASDAQ$LogReturn_Open, type="l", col="red", xlab="Dan", ylab="Log return", main="NASDAQ Open, Close, High i Low Log Return")
+lines(NASDAQ$LogReturn_High, type="l", col="blue")
+lines(NASDAQ$LogReturn_Low, type="l", col="green")
+lines(NASDAQ$LogReturn_Last, type="l", col="purple")
+
+# Legenda za grafikone
+legend("topright", legend=c("Open", "High", "Low", "Close"), col=c("red", "blue", "green", "purple"), lty=1)
+
+##### sa candlestickom ---------NE RADI
+
+# Učitavanje potrebnih paketa
+library(ggplot2)
+install.packages("reshape2")
+library(reshape2)
+install.packages("tidyquant")
+library(tidyquant)
+
+#****-------------------------------------------------------------------------------------------------------------------------------------------------------
+# Reshapeovanje podataka
+NASDAQ.m <- melt(NASDAQ[,c("Date", "LogReturn_Open", "LogReturn_Last", "LogReturn_High", "LogReturn_Low")], id.vars = "Date")
+
+# Kreiranje grafikona sa sve četiri cene i candlestick chart-om
+ggplot(NASDAQ.m, aes(Date, value)) +
+  geom_line(data = subset(NASDAQ.m, variable %in% c("LogReturn_Open", "LogReturn_Last", "LogReturn_High", "LogReturn_Low")), aes(color = variable)) +
+  geom_candlestick(data = NASDAQ, aes(x = Date, open = LogReturn_Open, high = LogReturn_High, low = LogReturn_Low, close = LogReturn_Last), fill = "red", color = "black") +
+  scale_color_manual(values = c("red", "blue", "green", "purple")) +
+  labs(title = "NASDAQ Open, Close, High i Low sa Candlestick Chart-om", x = "Datum", y = "Cena") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+#***-------------------------------------------------------------------------------------------------------------------------------------------------
+# Grafikon (Net Return)
+plot(NASDAQ$NetReturn_Open, type="l", col="red", xlab="Dan", ylab="Net return", main="NASDAQ Open, Close, High i Low Net Return")
+lines(NASDAQ$NetReturn_High, type="l", col="blue")
+lines(NASDAQ$NetReturn_Low, type="l", col="green")
+lines(NASDAQ$NetReturn_Last, type="l", col="purple")
+
+# Legenda za grafikone
+legend("topright", legend=c("Open", "High", "Low", "Close"), col=c("red", "blue", "green", "purple"), lty=1)
+
+
+
+
+
+
+
+
 
 
 

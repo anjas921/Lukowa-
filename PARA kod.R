@@ -31,6 +31,22 @@ for(i in 2:nrow(PARA)){
   PARA$LogReturn_Low[i]<-log(PARA$Low[i]/PARA$Low[i-1])
   PARA$LogReturn_Last[i]<-log(PARA$Last[i]/PARA$Last[i-1])
 }
+#CIST PRINOS
+# DNEVNI NET RETURN (cisti prinos)
+
+#prvo moraju da se naprave kolone u dataframe-u
+PARA$NetReturn_Open<-0
+PARA$NetReturn_High<-0
+PARA$NetReturn_Low<-0
+PARA$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(PARA)){
+  PARA$NetReturn_Open[i]<-(PARA$Open[i]-PARA$Open[i-1])/PARA$Open[i-1]
+  PARA$NetReturn_High[i]<-(PARA$High[i]-PARA$High[i-1])/PARA$High[i-1]
+  PARA$NetReturn_Low[i]<-(PARA$Low[i]-PARA$Low[i-1])/PARA$Low[i-1]
+  PARA$NetReturn_Last[i]<-(PARA$Last[i]-PARA$Last[i-1])/PARA$Last[i-1]
+}
 
 # ///////////////////////////
 
@@ -79,6 +95,22 @@ for(i in 2:nrow(PARA_weekly)){
   PARA_weekly$LogReturn_Close[i]<-log(PARA_weekly$weekly_close[i]/PARA_weekly$weekly_close[i-1])
 }
 
+#NEDELJNI CIST PRINOS
+# NEDELJNI NET RETURN (cisti prinos)
+
+#prvo moraju da se naprave kolone u dataframe-u
+PARA_weekly$NetReturn_Open<-0
+PARA_weekly$NetReturn_High<-0
+PARA_weekly$NetReturn_Low<-0
+PARA_weekly$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(PARA_weekly)){
+  PARA_weekly$NetReturn_Open[i]<-(PARA_weekly$weekly_open[i]-PARA_weekly$weekly_open[i-1])/PARA_weekly$weekly_open[i-1]
+  PARA_weekly$NetReturn_High[i]<-(PARA_weekly$weekly_high[i]-PARA_weekly$weekly_high[i-1])/PARA_weekly$weekly_high[i-1]
+  PARA_weekly$NetReturn_Low[i]<-(PARA_weekly$weekly_low[i]-PARA_weekly$weekly_low[i-1])/PARA_weekly$weekly_low[i-1]
+  PARA_weekly$NetReturn_Last[i]<-(PARA_weekly$weekly_close[i]-PARA_weekly$weekly_close[i-1])/PARA_weekly$weekly_close[i-1]
+}
 # ///////////////////////////
 
 # Ucitaj pakete
@@ -123,6 +155,21 @@ for(i in 2:nrow(PARA_monthly)){
   PARA_monthly$LogReturn_Low[i]<-log(PARA_monthly$monthly_low[i]/PARA_monthly$monthly_low[i-1])
   PARA_monthly$LogReturn_Close[i]<-log(PARA_monthly$monthly_close[i]/PARA_monthly$monthly_close[i-1])
 }
+## MESECNI NET RETURN (cisti prinos)
+
+#prvo moraju da se naprave kolone u dataframe-u
+PARA_monthly$NetReturn_Open<-0
+PARA_monthly$NetReturn_High<-0
+PARA_monthly$NetReturn_Low<-0
+PARA_monthly$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(PARA_monthly)){
+  PARA_monthly$NetReturn_Open[i]<-(PARA_monthly$monthly_open[i]-PARA_monthly$monthly_open[i-1])/PARA_monthly$monthly_open[i-1]
+  PARA_monthly$NetReturn_High[i]<-(PARA_monthly$monthly_high[i]-PARA_monthly$monthly_high[i-1])/PARA_monthly$monthly_high[i-1]
+  PARA_monthly$NetReturn_Low[i]<-(PARA_monthly$monthly_low[i]-PARA_monthly$monthly_low[i-1])/PARA_monthly$monthly_low[i-1]
+  PARA_monthly$NetReturn_Last[i]<-(PARA_monthly$monthly_close[i]-PARA_monthly$monthly_close[i-1])/PARA_monthly$monthly_close[i-1]
+}
 
 # ///////////////////////////
 
@@ -162,6 +209,34 @@ for(i in 2:nrow(PARA_yearly)){
   PARA_yearly$LogReturn_Low[i]<-log(PARA_yearly$yearly_low[i]/PARA_yearly$yearly_low[i-1])
   PARA_yearly$LogReturn_Close[i]<-log(PARA_yearly$yearly_close[i]/PARA_yearly$yearly_close[i-1])
 }
+
+
+#GODISNJI CIST PRINOS
+# GODISNJI NET RETURN (cisti prinos)
+
+#prvo moraju da se naprave kolone u dataframe-u
+PARA_yearly$NetReturn_Open<-0
+PARA_yearly$NetReturn_High<-0
+PARA_yearly$NetReturn_Low<-0
+PARA_yearly$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(PARA_yearly)){
+  PARA_yearly$NetReturn_Open[i]<-(PARA_yearly$yearly_open[i]-PARA_yearly$yearly_open[i-1])/PARA_yearly$yearly_open[i-1]
+  PARA_yearly$NetReturn_High[i]<-(PARA_yearly$yearly_high[i]-PARA_yearly$yearly_high[i-1])/PARA_yearly$yearly_high[i-1]
+  PARA_yearly$NetReturn_Low[i]<-(PARA_yearly$yearly_low[i]-PARA_yearly$yearly_low[i-1])/PARA_yearly$yearly_low[i-1]
+  PARA_yearly$NetReturn_Last[i]<-(PARA_yearly$yearly_close[i]-PARA_yearly$yearly_close[i-1])/PARA_yearly$yearly_close[i-1]
+}
+
+#net returns ukupno od godisnjeg, VOLATILNOST PRINOSA
+PARA_yearly$NetReturns_Open_UK <- "/"
+PARA_yearly$NetReturns_Open_UK[1] <- sd(PARA_yearly$NetReturn_Open)
+PARA_yearly$NetReturns_High_UK <- "/"
+PARA_yearly$NetReturns_High_UK[1] <- sd(PARA_yearly$NetReturn_High)
+PARA_yearly$NetReturns_Low_UK<- "/"
+PARA_yearly$NetReturns_Low_UK[1] <- sd(PARA_yearly$NetReturn_Low)
+PARA_yearly$NetReturns_Last_UK<- "/"
+PARA_yearly$NetReturns_Last_UK[1] <- sd(PARA_yearly$NetReturn_Last)
 
 #--------------------------------------------------------------------------------------------------------------
 # Calculating yearly volatility using standard deviation of log returns (volatilnost po godinama)
@@ -327,20 +402,78 @@ PARA$MA252 <- rollmean(PARA$Last, k = 252, fill = NA)
 
 ggplot(PARA, aes(x = Date, y = Last,group = 1)) + geom_line() + labs(x = "Date", y = "Price", title = "Raw Prices")
 
+#------------------
 ggplot(PARA, aes(x = Date, y = Last,group = 1)) +
   geom_line() +
-  geom_line(aes(y = MA5,group = 1), color = "blue", linetype = "dashed") +
-  geom_line(aes(y = MA21,group = 1), color = "green", linetype = "dashed") +
-  geom_line(aes(y = MA63,group = 1), color = "red", linetype = "dashed") +
-  geom_line(aes(y = MA126,group = 1), color = "yellow", linetype = "dashed") +
-  geom_line(aes(y = MA252,group = 1), color = "magenta", linetype = "dashed") +
+  geom_line(aes(y = MA5,group = 1), color = "blue", linetype = "solid") +
+  geom_line(aes(y = MA21,group = 1), color = "green", linetype = "solid") +
+  geom_line(aes(y = MA63,group = 1), color = "red", linetype = "solid") +
+  geom_line(aes(y = MA126,group = 1), color = "yellow", linetype = "solid") +
+  geom_line(aes(y = MA252,group = 1), color = "magenta", linetype = "solid") +
   labs(x = "Date", y = "Price", title = "Moving Averages") +
   scale_linetype_manual(values = c("solid", "dashed", "dotted"))
+
 
 #--------------------------------------------------------------------------------------------------------------
 # Using all the gathered information from descriptive measures, returns and moving averages,
 # rating companies based on price levels of their stock
 #--------------------------------------------------------------------------------------------------------------
+
+# prinose (i log i net) iscrtati na line grafiku sa 5 podgrafika:
+# prinos open cene
+# prinos high
+# prinos low
+# prinos close
+# prinos candlestick (OVAJ DEO NE MOZE DA SE URADI, NE MOGU DA NADJEM NACIN DA SPOJIM LINECHART SA CANDLESTICK CHARTOM)
+
+#DNEVNI
+# Grafikon (Log Return)
+plot(PARA$LogReturn_Open, type="l", col="red", xlab="Dan", ylab="Log return", main="PARA Open, Close, High i Low Log Return")
+lines(PARA$LogReturn_High, type="l", col="blue")
+lines(PARA$LogReturn_Low, type="l", col="green")
+lines(PARA$LogReturn_Last, type="l", col="purple")
+
+# Legenda za grafikone
+legend("topright", legend=c("Open", "High", "Low", "Close"), col=c("red", "blue", "green", "purple"), lty=1)
+
+##### sa candlestickom ---------NE RADI
+
+# Učitavanje potrebnih paketa
+library(ggplot2)
+install.packages("reshape2")
+library(reshape2)
+install.packages("tidyquant")
+library(tidyquant)
+
+#****-------------------------------------------------------------------------------------------------------------------------------------------------------
+# Reshapeovanje podataka
+PARA.m <- melt(PARA[,c("Date", "LogReturn_Open", "LogReturn_Last", "LogReturn_High", "LogReturn_Low")], id.vars = "Date")
+
+# Kreiranje grafikona sa sve četiri cene i candlestick chart-om
+ggplot(PARA.m, aes(Date, value)) +
+  geom_line(data = subset(PARA.m, variable %in% c("LogReturn_Open", "LogReturn_Last", "LogReturn_High", "LogReturn_Low")), aes(color = variable)) +
+  geom_candlestick(data = PARA, aes(x = Date, open = LogReturn_Open, high = LogReturn_High, low = LogReturn_Low, close = LogReturn_Last), fill = "red", color = "black") +
+  scale_color_manual(values = c("red", "blue", "green", "purple")) +
+  labs(title = "PARA Open, Close, High i Low sa Candlestick Chart-om", x = "Datum", y = "Cena") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+#***-------------------------------------------------------------------------------------------------------------------------------------------------
+# Grafikon (Net Return)
+plot(PARA$NetReturn_Open, type="l", col="red", xlab="Dan", ylab="Net return", main="PARA Open, Close, High i Low Net Return")
+lines(PARA$NetReturn_High, type="l", col="blue")
+lines(PARA$NetReturn_Low, type="l", col="green")
+lines(PARA$NetReturn_Last, type="l", col="purple")
+
+# Legenda za grafikone
+legend("topright", legend=c("Open", "High", "Low", "Close"), col=c("red", "blue", "green", "purple"), lty=1)
+
+
+
+
+
+
+
+
 
 
 

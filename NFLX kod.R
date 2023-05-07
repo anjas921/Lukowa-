@@ -33,6 +33,23 @@ for(i in 2:nrow(NFLX)){
   NFLX$LogReturn_Last[i]<-log(NFLX$Last[i]/NFLX$Last[i-1])
 }
 
+#CIST PRINOS
+# DNEVNI NET RETURN (cisti prinos)
+
+#prvo moraju da se naprave kolone u dataframe-u
+NFLX$NetReturn_Open<-0
+NFLX$NetReturn_High<-0
+NFLX$NetReturn_Low<-0
+NFLX$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(NFLX)){
+  NFLX$NetReturn_Open[i]<-(NFLX$Open[i]-NFLX$Open[i-1])/NFLX$Open[i-1]
+  NFLX$NetReturn_High[i]<-(NFLX$High[i]-NFLX$High[i-1])/NFLX$High[i-1]
+  NFLX$NetReturn_Low[i]<-(NFLX$Low[i]-NFLX$Low[i-1])/NFLX$Low[i-1]
+  NFLX$NetReturn_Last[i]<-(NFLX$Last[i]-NFLX$Last[i-1])/NFLX$Last[i-1]
+}
+
 # ///////////////////////////
 
 # grupisanje podataka po nedeljama
@@ -80,6 +97,24 @@ for(i in 2:nrow(NFLX_weekly)){
   NFLX_weekly$LogReturn_Close[i]<-log(NFLX_weekly$weekly_close[i]/NFLX_weekly$weekly_close[i-1])
 }
 
+
+#NEDELJNI CIST PRINOS
+# NEDELJNI NET RETURN (cisti prinos)
+
+#prvo moraju da se naprave kolone u dataframe-u
+NFLX_weekly$NetReturn_Open<-0
+NFLX_weekly$NetReturn_High<-0
+NFLX_weekly$NetReturn_Low<-0
+NFLX_weekly$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(NFLX_weekly)){
+  NFLX_weekly$NetReturn_Open[i]<-(NFLX_weekly$weekly_open[i]-NFLX_weekly$weekly_open[i-1])/NFLX_weekly$weekly_open[i-1]
+  NFLX_weekly$NetReturn_High[i]<-(NFLX_weekly$weekly_high[i]-NFLX_weekly$weekly_high[i-1])/NFLX_weekly$weekly_high[i-1]
+  NFLX_weekly$NetReturn_Low[i]<-(NFLX_weekly$weekly_low[i]-NFLX_weekly$weekly_low[i-1])/NFLX_weekly$weekly_low[i-1]
+  NFLX_weekly$NetReturn_Last[i]<-(NFLX_weekly$weekly_close[i]-NFLX_weekly$weekly_close[i-1])/NFLX_weekly$weekly_close[i-1]
+}
+
 # ///////////////////////////
 
 # Ucitaj pakete
@@ -125,6 +160,22 @@ for(i in 2:nrow(NFLX_monthly)){
   NFLX_monthly$LogReturn_Close[i]<-log(NFLX_monthly$monthly_close[i]/NFLX_monthly$monthly_close[i-1])
 }
 
+## MESECNI NET RETURN (cisti prinos)
+
+#prvo moraju da se naprave kolone u dataframe-u
+NFLX_monthly$NetReturn_Open<-0
+NFLX_monthly$NetReturn_High<-0
+NFLX_monthly$NetReturn_Low<-0
+NFLX_monthly$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(NFLX_monthly)){
+  NFLX_monthly$NetReturn_Open[i]<-(NFLX_monthly$monthly_open[i]-NFLX_monthly$monthly_open[i-1])/NFLX_monthly$monthly_open[i-1]
+  NFLX_monthly$NetReturn_High[i]<-(NFLX_monthly$monthly_high[i]-NFLX_monthly$monthly_high[i-1])/NFLX_monthly$monthly_high[i-1]
+  NFLX_monthly$NetReturn_Low[i]<-(NFLX_monthly$monthly_low[i]-NFLX_monthly$monthly_low[i-1])/NFLX_monthly$monthly_low[i-1]
+  NFLX_monthly$NetReturn_Last[i]<-(NFLX_monthly$monthly_close[i]-NFLX_monthly$monthly_close[i-1])/NFLX_monthly$monthly_close[i-1]
+}
+#
 # ///////////////////////////
 
 # Ucitaj pakete
@@ -164,6 +215,32 @@ for(i in 2:nrow(NFLX_yearly)){
   NFLX_yearly$LogReturn_Close[i]<-log(NFLX_yearly$yearly_close[i]/NFLX_yearly$yearly_close[i-1])
 }
 
+#GODISNJI CIST PRINOS
+# GODISNJI NET RETURN (cisti prinos)
+
+#prvo moraju da se naprave kolone u dataframe-u
+NFLX_yearly$NetReturn_Open<-0
+NFLX_yearly$NetReturn_High<-0
+NFLX_yearly$NetReturn_Low<-0
+NFLX_yearly$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(NFLX_yearly)){
+  NFLX_yearly$NetReturn_Open[i]<-(NFLX_yearly$yearly_open[i]-NFLX_yearly$yearly_open[i-1])/NFLX_yearly$yearly_open[i-1]
+  NFLX_yearly$NetReturn_High[i]<-(NFLX_yearly$yearly_high[i]-NFLX_yearly$yearly_high[i-1])/NFLX_yearly$yearly_high[i-1]
+  NFLX_yearly$NetReturn_Low[i]<-(NFLX_yearly$yearly_low[i]-NFLX_yearly$yearly_low[i-1])/NFLX_yearly$yearly_low[i-1]
+  NFLX_yearly$NetReturn_Last[i]<-(NFLX_yearly$yearly_close[i]-NFLX_yearly$yearly_close[i-1])/NFLX_yearly$yearly_close[i-1]
+}
+
+#net returns ukupno od godisnjeg, VOLATILNOST PRINOSA
+NFLX_yearly$NetReturns_Open_UK <- "/"
+NFLX_yearly$NetReturns_Open_UK[1] <- sd(NFLX_yearly$NetReturn_Open)
+NFLX_yearly$NetReturns_High_UK <- "/"
+NFLX_yearly$NetReturns_High_UK[1] <- sd(NFLX_yearly$NetReturn_High)
+NFLX_yearly$NetReturns_Low_UK<- "/"
+NFLX_yearly$NetReturns_Low_UK[1] <- sd(NFLX_yearly$NetReturn_Low)
+NFLX_yearly$NetReturns_Last_UK<- "/"
+NFLX_yearly$NetReturns_Last_UK[1] <- sd(NFLX_yearly$NetReturn_Last)
 #--------------------------------------------------------------------------------------------------------------
 # Calculating yearly volatility using standard deviation of log returns (volatilnost po godinama)
 #--------------------------------------------------------------------------------------------------------------
@@ -328,20 +405,79 @@ NFLX$MA252 <- rollmean(NFLX$Last, k = 252, fill = NA)
 
 ggplot(NFLX, aes(x = Date, y = Last,group = 1)) + geom_line() + labs(x = "Date", y = "Price", title = "Raw Prices")
 
-ggplot(NFLX, aes(x = Date, y = Last,group = 1)) +
-  geom_line() +
-  geom_line(aes(y = MA5,group = 1), color = "blue", linetype = "dashed") +
-  geom_line(aes(y = MA21,group = 1), color = "green", linetype = "dashed") +
-  geom_line(aes(y = MA63,group = 1), color = "red", linetype = "dashed") +
-  geom_line(aes(y = MA126,group = 1), color = "yellow", linetype = "dashed") +
-  geom_line(aes(y = MA252,group = 1), color = "magenta", linetype = "dashed") +
-  labs(x = "Date", y = "Price", title = "Moving Averages") +
-  scale_linetype_manual(values = c("solid", "dashed", "dotted"))
+
 
 #--------------------------------------------------------------------------------------------------------------
 # Using all the gathered information from descriptive measures, returns and moving averages,
 # rating companies based on price levels of their stock
 #--------------------------------------------------------------------------------------------------------------
+ggplot(NFLX, aes(x = Date, y = Last,group = 1)) +
+  geom_line() +
+  geom_line(aes(y = MA5,group = 1), color = "blue", linetype = "solid") +
+  geom_line(aes(y = MA21,group = 1), color = "green", linetype = "solid") +
+  geom_line(aes(y = MA63,group = 1), color = "red", linetype = "solid") +
+  geom_line(aes(y = MA126,group = 1), color = "yellow", linetype = "solid") +
+  geom_line(aes(y = MA252,group = 1), color = "magenta", linetype = "solid") +
+  labs(x = "Date", y = "Price", title = "Moving Averages") +
+  scale_linetype_manual(values = c("solid", "dashed", "dotted"))
+
+# prinose (i log i net) iscrtati na line grafiku sa 5 podgrafika:
+# prinos open cene
+# prinos high
+# prinos low
+# prinos close
+# prinos candlestick (OVAJ DEO NE MOZE DA SE URADI, NE MOGU DA NADJEM NACIN DA SPOJIM LINECHART SA CANDLESTICK CHARTOM)
+
+#DNEVNI
+# Grafikon (Log Return)
+plot(NFLX$LogReturn_Open, type="l", col="red", xlab="Dan", ylab="Log return", main="NFLX Open, Close, High i Low Log Return")
+lines(NFLX$LogReturn_High, type="l", col="blue")
+lines(NFLX$LogReturn_Low, type="l", col="green")
+lines(NFLX$LogReturn_Last, type="l", col="purple")
+
+# Legenda za grafikone
+legend("topright", legend=c("Open", "High", "Low", "Close"), col=c("red", "blue", "green", "purple"), lty=1)
+
+##### sa candlestickom ---------NE RADI
+
+# Učitavanje potrebnih paketa
+library(ggplot2)
+install.packages("reshape2")
+library(reshape2)
+install.packages("tidyquant")
+library(tidyquant)
+
+#****-------------------------------------------------------------------------------------------------------------------------------------------------------
+# Reshapeovanje podataka
+NFLX.m <- melt(NFLX[,c("Date", "LogReturn_Open", "LogReturn_Last", "LogReturn_High", "LogReturn_Low")], id.vars = "Date")
+
+# Kreiranje grafikona sa sve četiri cene i candlestick chart-om
+ggplot(NFLX.m, aes(Date, value)) +
+  geom_line(data = subset(NFLX.m, variable %in% c("LogReturn_Open", "LogReturn_Last", "LogReturn_High", "LogReturn_Low")), aes(color = variable)) +
+  geom_candlestick(data = NFLX, aes(x = Date, open = LogReturn_Open, high = LogReturn_High, low = LogReturn_Low, close = LogReturn_Last), fill = "red", color = "black") +
+  scale_color_manual(values = c("red", "blue", "green", "purple")) +
+  labs(title = "NFLX Open, Close, High i Low sa Candlestick Chart-om", x = "Datum", y = "Cena") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+#***-------------------------------------------------------------------------------------------------------------------------------------------------
+# Grafikon (Net Return)
+plot(NFLX$NetReturn_Open, type="l", col="red", xlab="Dan", ylab="Net return", main="NFLX Open, Close, High i Low Net Return")
+lines(NFLX$NetReturn_High, type="l", col="blue")
+lines(NFLX$NetReturn_Low, type="l", col="green")
+lines(NFLX$NetReturn_Last, type="l", col="purple")
+
+# Legenda za grafikone
+legend("topright", legend=c("Open", "High", "Low", "Close"), col=c("red", "blue", "green", "purple"), lty=1)
+
+
+
+
+
+
+
+
+
+
 
 
 

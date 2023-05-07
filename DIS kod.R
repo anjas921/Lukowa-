@@ -31,7 +31,19 @@ for(i in 2:nrow(DIS)){
   DIS$LogReturn_Low[i]<-log(DIS$Low[i]/DIS$Low[i-1])
   DIS$LogReturn_Last[i]<-log(DIS$Last[i]/DIS$Last[i-1])
 }
+#prvo moraju da se naprave kolone u dataframe-u
+DIS$NetReturn_Open<-0
+DIS$NetReturn_High<-0
+DIS$NetReturn_Low<-0
+DIS$NetReturn_Last<-0
 
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(DIS)){
+  DIS$NetReturn_Open[i]<-(DIS$Open[i]-DIS$Open[i-1])/DIS$Open[i-1]
+  DIS$NetReturn_High[i]<-(DIS$High[i]-DIS$High[i-1])/DIS$High[i-1]
+  DIS$NetReturn_Low[i]<-(DIS$Low[i]-DIS$Low[i-1])/DIS$Low[i-1]
+  DIS$NetReturn_Last[i]<-(DIS$Last[i]-DIS$Last[i-1])/DIS$Last[i-1]
+}
 # ///////////////////////////
 
 # grupisanje podataka po nedeljama
@@ -79,6 +91,21 @@ for(i in 2:nrow(DIS_weekly)){
   DIS_weekly$LogReturn_Close[i]<-log(DIS_weekly$weekly_close[i]/DIS_weekly$weekly_close[i-1])
 }
 
+# NEDELJNI NET RETURN (cisti prinos)
+
+#prvo moraju da se naprave kolone u dataframe-u
+DIS_weekly$NetReturn_Open<-0
+DIS_weekly$NetReturn_High<-0
+DIS_weekly$NetReturn_Low<-0
+DIS_weekly$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(DIS_weekly)){
+  DIS_weekly$NetReturn_Open[i]<-(DIS_weekly$weekly_open[i]-DIS_weekly$weekly_open[i-1])/DIS_weekly$weekly_open[i-1]
+  DIS_weekly$NetReturn_High[i]<-(DIS_weekly$weekly_high[i]-DIS_weekly$weekly_high[i-1])/DIS_weekly$weekly_high[i-1]
+  DIS_weekly$NetReturn_Low[i]<-(DIS_weekly$weekly_low[i]-DIS_weekly$weekly_low[i-1])/DIS_weekly$weekly_low[i-1]
+  DIS_weekly$NetReturn_Last[i]<-(DIS_weekly$weekly_close[i]-DIS_weekly$weekly_close[i-1])/DIS_weekly$weekly_close[i-1]
+}
 # ///////////////////////////
 
 # Ucitaj pakete
@@ -124,6 +151,21 @@ for(i in 2:nrow(DIS_monthly)){
   DIS_monthly$LogReturn_Close[i]<-log(DIS_monthly$monthly_close[i]/DIS_monthly$monthly_close[i-1])
 }
 
+# MESECNI NET RETURN (cisti prinos)
+
+#prvo moraju da se naprave kolone u dataframe-u
+DIS_monthly$NetReturn_Open<-0
+DIS_monthly$NetReturn_High<-0
+DIS_monthly$NetReturn_Low<-0
+DIS_monthly$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(DIS_monthly)){
+  DIS_monthly$NetReturn_Open[i]<-(DIS_monthly$monthly_open[i]-DIS_monthly$monthly_open[i-1])/DIS_monthly$monthly_open[i-1]
+  DIS_monthly$NetReturn_High[i]<-(DIS_monthly$monthly_high[i]-DIS_monthly$monthly_high[i-1])/DIS_monthly$monthly_high[i-1]
+  DIS_monthly$NetReturn_Low[i]<-(DIS_monthly$monthly_low[i]-DIS_monthly$monthly_low[i-1])/DIS_monthly$monthly_low[i-1]
+  DIS_monthly$NetReturn_Last[i]<-(DIS_monthly$monthly_close[i]-DIS_monthly$monthly_close[i-1])/DIS_monthly$monthly_close[i-1]
+}
 # ///////////////////////////
 
 # Ucitaj pakete
@@ -162,7 +204,33 @@ for(i in 2:nrow(DIS_yearly)){
   DIS_yearly$LogReturn_Low[i]<-log(DIS_yearly$yearly_low[i]/DIS_yearly$yearly_low[i-1])
   DIS_yearly$LogReturn_Close[i]<-log(DIS_yearly$yearly_close[i]/DIS_yearly$yearly_close[i-1])
 }
+# GODISNJI NET RETURN (cisti prinos)
 
+#prvo moraju da se naprave kolone u dataframe-u
+DIS_yearly$NetReturn_Open<-0
+DIS_yearly$NetReturn_High<-0
+DIS_yearly$NetReturn_Low<-0
+DIS_yearly$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(DIS_yearly)){
+  DIS_yearly$NetReturn_Open[i]<-(DIS_yearly$yearly_open[i]-DIS_yearly$yearly_open[i-1])/DIS_yearly$yearly_open[i-1]
+  DIS_yearly$NetReturn_High[i]<-(DIS_yearly$yearly_high[i]-DIS_yearly$yearly_high[i-1])/DIS_yearly$yearly_high[i-1]
+  DIS_yearly$NetReturn_Low[i]<-(DIS_yearly$yearly_low[i]-DIS_yearly$yearly_low[i-1])/DIS_yearly$yearly_low[i-1]
+  DIS_yearly$NetReturn_Last[i]<-(DIS_yearly$yearly_close[i]-DIS_yearly$yearly_close[i-1])/DIS_yearly$yearly_close[i-1]
+}
+
+
+
+#net returns ukupno od godisnjeg, VOLATILNOST PRINOSA
+DIS_yearly$NetReturns_Open_UK <- "/"
+DIS_yearly$NetReturns_Open_UK[1] <- sd(DIS_yearly$NetReturn_Open)
+DIS_yearly$NetReturns_High_UK <- "/"
+DIS_yearly$NetReturns_High_UK[1] <- sd(DIS_yearly$NetReturn_High)
+DIS_yearly$NetReturns_Low_UK<- "/"
+DIS_yearly$NetReturns_Low_UK[1] <- sd(DIS_yearly$NetReturn_Low)
+DIS_yearly$NetReturns_Last_UK<- "/"
+DIS_yearly$NetReturns_Last_UK[1] <- sd(DIS_yearly$NetReturn_Last)
 #--------------------------------------------------------------------------------------------------------------
 # Calculating yearly volatility using standard deviation of log returns (volatilnost po godinama)
 #--------------------------------------------------------------------------------------------------------------
@@ -327,13 +395,14 @@ DIS$MA252 <- rollmean(DIS$Last, k = 252, fill = NA)
 
 ggplot(DIS, aes(x = Date, y = Last,group = 1)) + geom_line() + labs(x = "Date", y = "Price", title = "Raw Prices")
 
+dev.off()
 ggplot(DIS, aes(x = Date, y = Last,group = 1)) +
   geom_line() +
-  geom_line(aes(y = MA5,group = 1), color = "blue", linetype = "dashed") +
-  geom_line(aes(y = MA21,group = 1), color = "green", linetype = "dashed") +
-  geom_line(aes(y = MA63,group = 1), color = "red", linetype = "dashed") +
-  geom_line(aes(y = MA126,group = 1), color = "yellow", linetype = "dashed") +
-  geom_line(aes(y = MA252,group = 1), color = "magenta", linetype = "dashed") +
+  geom_line(aes(y = MA5,group = 1), color = "blue", linetype = "solid") +
+  geom_line(aes(y = MA21,group = 1), color = "green", linetype = "solid") +
+  geom_line(aes(y = MA63,group = 1), color = "red", linetype = "solid") +
+  geom_line(aes(y = MA126,group = 1), color = "yellow", linetype = "solid") +
+  geom_line(aes(y = MA252,group = 1), color = "magenta", linetype = "solid") +
   labs(x = "Date", y = "Price", title = "Moving Averages") +
   scale_linetype_manual(values = c("solid", "dashed", "dotted"))
 
@@ -341,6 +410,51 @@ ggplot(DIS, aes(x = Date, y = Last,group = 1)) +
 # Using all the gathered information from descriptive measures, returns and moving averages,
 # rating companies based on price levels of their stock
 #--------------------------------------------------------------------------------------------------------------
+#prinose (i log i net) iscrtati na line grafiku sa 5 podgrafika:
+  # prinos open cene
+  # prinos high
+  # prinos low
+  # prinos close
+  # prinos candlestick (OVAJ DEO NE MOZE DA SE URADI, NE MOGU DA NADJEM NACIN DA SPOJIM LINECHART SA CANDLESTICK CHARTOM)
+  #--------------------------------------------------------------------------------------------------------------
+#DNEVNI
+# Grafikon (Log Return)
+plot(DIS$LogReturn_Open, type="l", col="red", xlab="Dan", ylab="Log return", main="DIS Open, Close, High i Low Log Return")
+lines(DIS$LogReturn_High, type="l", col="blue")
+lines(DIS$LogReturn_Low, type="l", col="green")
+lines(DIS$LogReturn_Last, type="l", col="purple")
+
+# Legenda za grafikone
+legend("topright", legend=c("Open", "High", "Low", "Close"), col=c("red", "blue", "green", "purple"), lty=1)
+
+##### sa candlestickom ---------NE RADI
+
+# Učitavanje potrebnih paketa
+library(ggplot2)
+install.packages("reshape2")
+library(reshape2)
+
+
+# Reshapeovanje podataka
+DIS.m <- melt(DIS[,c("Date", "LogReturn_Open", "LogReturn_Last", "LogReturn_High", "LogReturn_Low")], id.vars = "Date")
+
+# Kreiranje grafikona sa sve četiri cene i candlestick chart-om
+ggplot(DIS.m, aes(Date, value)) +
+  geom_line(data = subset(DIS.m, variable %in% c("LogReturn_Open", "LogReturn_Last", "LogReturn_High", "LogReturn_Low")), aes(color = variable)) +
+  geom_candlestick(data = DIS, aes(x = Date, open = LogReturn_Open, high = LogReturn_High, low = LogReturn_Low, close = LogReturn_Last), fill = "red", color = "black") +
+  scale_color_manual(values = c("red", "blue", "green", "purple")) +
+  labs(title = "DIS Open, Close, High i Low sa Candlestick Chart-om", x = "Datum", y = "Cena") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+# Grafikon (Net Return)
+plot(DIS$NetReturn_Open, type="l", col="red", xlab="Dan", ylab="Net return", main="DIS Open, Close, High i Low Net Return")
+lines(DIS$NetReturn_High, type="l", col="blue")
+lines(DIS$NetReturn_Low, type="l", col="green")
+lines(DIS$NetReturn_Last, type="l", col="purple")
+
+# Legenda za grafikone
+legend("topright", legend=c("Open", "High", "Low", "Close"), col=c("red", "blue", "green", "purple"), lty=1)
 
 
 

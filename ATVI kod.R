@@ -42,6 +42,22 @@ for(i in 2:nrow(ATVI)){
   ATVI$LogReturn_Last[i]<-log(ATVI$Last[i]/ATVI$Last[i-1])
 }
 
+# DNEVNI NET RETURN (cisti prinos)
+
+#prvo moraju da se naprave kolone u dataframe-u
+ATVI$NetReturn_Open<-0
+ATVI$NetReturn_High<-0
+ATVI$NetReturn_Low<-0
+ATVI$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(ATVI)){
+  ATVI$NetReturn_Open[i]<-(ATVI$Open[i]-ATVI$Open[i-1])/ATVI$Open[i-1]
+  ATVI$NetReturn_High[i]<-(ATVI$High[i]-ATVI$High[i-1])/ATVI$High[i-1]
+  ATVI$NetReturn_Low[i]<-(ATVI$Low[i]-ATVI$Low[i-1])/ATVI$Low[i-1]
+  ATVI$NetReturn_Last[i]<-(ATVI$Last[i]-ATVI$Last[i-1])/ATVI$Last[i-1]
+}
+
 # ///////////////////////////
 
 # grupisanje podataka po nedeljama
@@ -89,6 +105,21 @@ for(i in 2:nrow(ATVI_weekly)){
   ATVI_weekly$LogReturn_Close[i]<-log(ATVI_weekly$weekly_close[i]/ATVI_weekly$weekly_close[i-1])
 }
 
+# NEDELJNI NET RETURN (cisti prinos)
+
+#prvo moraju da se naprave kolone u dataframe-u
+ATVI_weekly$NetReturn_Open<-0
+ATVI_weekly$NetReturn_High<-0
+ATVI_weekly$NetReturn_Low<-0
+ATVI_weekly$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(ATVI_weekly)){
+  ATVI_weekly$NetReturn_Open[i]<-(ATVI_weekly$weekly_open[i]-ATVI_weekly$weekly_open[i-1])/ATVI_weekly$weekly_open[i-1]
+  ATVI_weekly$NetReturn_High[i]<-(ATVI_weekly$weekly_high[i]-ATVI_weekly$weekly_high[i-1])/ATVI_weekly$weekly_high[i-1]
+  ATVI_weekly$NetReturn_Low[i]<-(ATVI_weekly$weekly_low[i]-ATVI_weekly$weekly_low[i-1])/ATVI_weekly$weekly_low[i-1]
+  ATVI_weekly$NetReturn_Last[i]<-(ATVI_weekly$weekly_close[i]-ATVI_weekly$weekly_close[i-1])/ATVI_weekly$weekly_close[i-1]
+}
 # ///////////////////////////
 
 # Ucitaj pakete
@@ -134,6 +165,22 @@ for(i in 2:nrow(ATVI_monthly)){
   ATVI_monthly$LogReturn_Close[i]<-log(ATVI_monthly$monthly_close[i]/ATVI_monthly$monthly_close[i-1])
 }
 
+# MESECNI NET RETURN (cisti prinos)
+
+#prvo moraju da se naprave kolone u dataframe-u
+ATVI_monthly$NetReturn_Open<-0
+ATVI_monthly$NetReturn_High<-0
+ATVI_monthly$NetReturn_Low<-0
+ATVI_monthly$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(ATVI_monthly)){
+  ATVI_monthly$NetReturn_Open[i]<-(ATVI_monthly$monthly_open[i]-ATVI_monthly$monthly_open[i-1])/ATVI_monthly$monthly_open[i-1]
+  ATVI_monthly$NetReturn_High[i]<-(ATVI_monthly$monthly_high[i]-ATVI_monthly$monthly_high[i-1])/ATVI_monthly$monthly_high[i-1]
+  ATVI_monthly$NetReturn_Low[i]<-(ATVI_monthly$monthly_low[i]-ATVI_monthly$monthly_low[i-1])/ATVI_monthly$monthly_low[i-1]
+  ATVI_monthly$NetReturn_Last[i]<-(ATVI_monthly$monthly_close[i]-ATVI_monthly$monthly_close[i-1])/ATVI_monthly$monthly_close[i-1]
+}
+
 # ///////////////////////////
 
 # Ucitaj pakete
@@ -173,6 +220,30 @@ for(i in 2:nrow(ATVI_yearly)){
   ATVI_yearly$LogReturn_Close[i]<-log(ATVI_yearly$yearly_close[i]/ATVI_yearly$yearly_close[i-1])
 }
 
+#prvo moraju da se naprave kolone u dataframe-u
+ATVI_yearly$NetReturn_Open<-0
+ATVI_yearly$NetReturn_High<-0
+ATVI_yearly$NetReturn_Low<-0
+ATVI_yearly$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(ATVI_yearly)){
+  ATVI_yearly$NetReturn_Open[i]<-(ATVI_yearly$yearly_open[i]-ATVI_yearly$yearly_open[i-1])/ATVI_yearly$yearly_open[i-1]
+  ATVI_yearly$NetReturn_High[i]<-(ATVI_yearly$yearly_high[i]-ATVI_yearly$yearly_high[i-1])/ATVI_yearly$yearly_high[i-1]
+  ATVI_yearly$NetReturn_Low[i]<-(ATVI_yearly$yearly_low[i]-ATVI_yearly$yearly_low[i-1])/ATVI_yearly$yearly_low[i-1]
+  ATVI_yearly$NetReturn_Last[i]<-(ATVI_yearly$yearly_close[i]-ATVI_yearly$yearly_close[i-1])/ATVI_yearly$yearly_close[i-1]
+}
+
+
+#net returns ukupno od godisnjeg, VOLATILNOST PRINOSA
+ATVI_yearly$NetReturns_Open_UK <- "/"
+ATVI_yearly$NetReturns_Open_UK[1] <- sd(ATVI_yearly$NetReturn_Open)
+ATVI_yearly$NetReturns_High_UK <- "/"
+ATVI_yearly$NetReturns_High_UK[1] <- sd(ATVI_yearly$NetReturn_High)
+ATVI_yearly$NetReturns_Low_UK<- "/"
+ATVI_yearly$NetReturns_Low_UK[1] <- sd(ATVI_yearly$NetReturn_Low)
+ATVI_yearly$NetReturns_Last_UK<- "/"
+ATVI_yearly$NetReturns_Last_UK[1] <- sd(ATVI_yearly$NetReturn_Last)
 #--------------------------------------------------------------------------------------------------------------
 # Calculating yearly volatility using standard deviation of log returns (volatilnost po godinama)
 #--------------------------------------------------------------------------------------------------------------
@@ -338,12 +409,11 @@ ATVI$MA252 <- rollmean(ATVI$Last, k = 252, fill = NA)
 ggplot(ATVI, aes(x = Date, y = Last,group = 1)) + geom_line() + labs(x = "Date", y = "Price", title = "Raw Prices")
 
 ggplot(ATVI, aes(x = Date, y = Last,group = 1)) +
-  geom_line() +
-  geom_line(aes(y = MA5,group = 1), color = "blue", linetype = "dashed") +
-  geom_line(aes(y = MA21,group = 1), color = "green", linetype = "dashed") +
-  geom_line(aes(y = MA63,group = 1), color = "red", linetype = "dashed") +
-  geom_line(aes(y = MA126,group = 1), color = "yellow", linetype = "dashed") +
-  geom_line(aes(y = MA252,group = 1), color = "magenta", linetype = "dashed") +
+  geom_line(aes(y = MA5,group = 1), color = "blue", linetype = "solid") +
+  geom_line(aes(y = MA21,group = 1), color = "green", linetype = "solid") +
+  geom_line(aes(y = MA63,group = 1), color = "red", linetype = "solid") +
+  geom_line(aes(y = MA126,group = 1), color = "yellow", linetype = "solid") +
+  geom_line(aes(y = MA252,group = 1), color = "magenta", linetype = "solid") +
   labs(x = "Date", y = "Price", title = "Moving Averages") +
   scale_linetype_manual(values = c("solid", "dashed", "dotted"))
 
@@ -353,7 +423,51 @@ ggplot(ATVI, aes(x = Date, y = Last,group = 1)) +
 #--------------------------------------------------------------------------------------------------------------
 
 
+#prinose (i log i net) iscrtati na line grafiku sa 5 podgrafika:
+  # prinos open cene
+  # prinos high
+  # prinos low
+  # prinos close
+  # prinos candlestick (OVAJ DEO NE MOZE DA SE URADI, NE MOGU DA NADJEM NACIN DA SPOJIM LINECHART SA CANDLESTICK CHARTOM)
+  #--------------------------------------------------------------------------------------------------------------
+#DNEVNI
+# Grafikon (Log Return)
+plot(ATVI$LogReturn_Open, type="l", col="red", xlab="Dan", ylab="Log return", main="ATVI Open, Close, High i Low Log Return")
+lines(ATVI$LogReturn_High, type="l", col="blue")
+lines(ATVI$LogReturn_Low, type="l", col="green")
+lines(ATVI$LogReturn_Last, type="l", col="purple")
 
+# Legenda za grafikone
+legend("topright", legend=c("Open", "High", "Low", "Close"), col=c("red", "blue", "green", "purple"), lty=1)
+
+##### sa candlestickom ---------NE RADI
+
+# Učitavanje potrebnih paketa
+library(ggplot2)
+#install.packages("reshape2")
+library(reshape2)
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------
+# Reshapeovanje podataka
+ATVI.m <- melt(ATVI[,c("Date", "LogReturn_Open", "LogReturn_Last", "LogReturn_High", "LogReturn_Low")], id.vars = "Date")
+
+# Kreiranje grafikona sa sve četiri cene i candlestick chart-om
+ggplot(ATVI.m, aes(Date, value)) +
+  geom_line(data = subset(ATVI.m, variable %in% c("LogReturn_Open", "LogReturn_Last", "LogReturn_High", "LogReturn_Low")), aes(color = variable)) +
+  geom_candlestick(data = ATVI, aes(x = Date, open = LogReturn_Open, high = LogReturn_High, low = LogReturn_Low, close = LogReturn_Last), fill = "red", color = "black") +
+  scale_color_manual(values = c("red", "blue", "green", "purple")) +
+  labs(title = "ATVI Open, Close, High i Low sa Candlestick Chart-om", x = "Datum", y = "Cena") +
+  theme(plot.title = element_text(hjust = 0.5))
+#-----------------------------------------------------------------------------------------------------------------------------------------------
+
+# Grafikon (Net Return)
+plot(ATVI$NetReturn_Open, type="l", col="red", xlab="Dan", ylab="Net return", main="ATVI Open, Close, High i Low Net Return")
+lines(ATVI$NetReturn_High, type="l", col="blue")
+lines(ATVI$NetReturn_Low, type="l", col="green")
+lines(ATVI$NetReturn_Last, type="l", col="purple")
+
+# Legenda za grafikone
+legend("topright", legend=c("Open", "High", "Low", "Close"), col=c("red", "blue", "green", "purple"), lty=1)
 
 
 

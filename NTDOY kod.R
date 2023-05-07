@@ -31,6 +31,22 @@ for(i in 2:nrow(NTDOY)){
   NTDOY$LogReturn_Low[i]<-log(NTDOY$Low[i]/NTDOY$Low[i-1])
   NTDOY$LogReturn_Last[i]<-log(NTDOY$Last[i]/NTDOY$Last[i-1])
 }
+#CIST PRINOS
+# DNEVNI NET RETURN (cisti prinos)
+
+#prvo moraju da se naprave kolone u dataframe-u
+NTDOY$NetReturn_Open<-0
+NTDOY$NetReturn_High<-0
+NTDOY$NetReturn_Low<-0
+NTDOY$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(NTDOY)){
+  NTDOY$NetReturn_Open[i]<-(NTDOY$Open[i]-NTDOY$Open[i-1])/NTDOY$Open[i-1]
+  NTDOY$NetReturn_High[i]<-(NTDOY$High[i]-NTDOY$High[i-1])/NTDOY$High[i-1]
+  NTDOY$NetReturn_Low[i]<-(NTDOY$Low[i]-NTDOY$Low[i-1])/NTDOY$Low[i-1]
+  NTDOY$NetReturn_Last[i]<-(NTDOY$Last[i]-NTDOY$Last[i-1])/NTDOY$Last[i-1]
+}
 
 # ///////////////////////////
 
@@ -78,7 +94,22 @@ for(i in 2:nrow(NTDOY_weekly)){
   NTDOY_weekly$LogReturn_Low[i]<-log(NTDOY_weekly$weekly_low[i]/NTDOY_weekly$weekly_low[i-1])
   NTDOY_weekly$LogReturn_Close[i]<-log(NTDOY_weekly$weekly_close[i]/NTDOY_weekly$weekly_close[i-1])
 }
+#NEDELJNI CIST PRINOS
+# NEDELJNI NET RETURN (cisti prinos)
 
+#prvo moraju da se naprave kolone u dataframe-u
+NTDOY_weekly$NetReturn_Open<-0
+NTDOY_weekly$NetReturn_High<-0
+NTDOY_weekly$NetReturn_Low<-0
+NTDOY_weekly$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(NTDOY_weekly)){
+  NTDOY_weekly$NetReturn_Open[i]<-(NTDOY_weekly$weekly_open[i]-NTDOY_weekly$weekly_open[i-1])/NTDOY_weekly$weekly_open[i-1]
+  NTDOY_weekly$NetReturn_High[i]<-(NTDOY_weekly$weekly_high[i]-NTDOY_weekly$weekly_high[i-1])/NTDOY_weekly$weekly_high[i-1]
+  NTDOY_weekly$NetReturn_Low[i]<-(NTDOY_weekly$weekly_low[i]-NTDOY_weekly$weekly_low[i-1])/NTDOY_weekly$weekly_low[i-1]
+  NTDOY_weekly$NetReturn_Last[i]<-(NTDOY_weekly$weekly_close[i]-NTDOY_weekly$weekly_close[i-1])/NTDOY_weekly$weekly_close[i-1]
+}
 # ///////////////////////////
 
 # Ucitaj pakete
@@ -124,6 +155,23 @@ for(i in 2:nrow(NTDOY_monthly)){
   NTDOY_monthly$LogReturn_Close[i]<-log(NTDOY_monthly$monthly_close[i]/NTDOY_monthly$monthly_close[i-1])
 }
 
+
+## MESECNI NET RETURN (cisti prinos)
+
+#prvo moraju da se naprave kolone u dataframe-u
+NTDOY_monthly$NetReturn_Open<-0
+NTDOY_monthly$NetReturn_High<-0
+NTDOY_monthly$NetReturn_Low<-0
+NTDOY_monthly$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(NTDOY_monthly)){
+  NTDOY_monthly$NetReturn_Open[i]<-(NTDOY_monthly$monthly_open[i]-NTDOY_monthly$monthly_open[i-1])/NTDOY_monthly$monthly_open[i-1]
+  NTDOY_monthly$NetReturn_High[i]<-(NTDOY_monthly$monthly_high[i]-NTDOY_monthly$monthly_high[i-1])/NTDOY_monthly$monthly_high[i-1]
+  NTDOY_monthly$NetReturn_Low[i]<-(NTDOY_monthly$monthly_low[i]-NTDOY_monthly$monthly_low[i-1])/NTDOY_monthly$monthly_low[i-1]
+  NTDOY_monthly$NetReturn_Last[i]<-(NTDOY_monthly$monthly_close[i]-NTDOY_monthly$monthly_close[i-1])/NTDOY_monthly$monthly_close[i-1]
+}
+
 # ///////////////////////////
 
 # Ucitaj pakete
@@ -162,7 +210,32 @@ for(i in 2:nrow(NTDOY_yearly)){
   NTDOY_yearly$LogReturn_Low[i]<-log(NTDOY_yearly$yearly_low[i]/NTDOY_yearly$yearly_low[i-1])
   NTDOY_yearly$LogReturn_Close[i]<-log(NTDOY_yearly$yearly_close[i]/NTDOY_yearly$yearly_close[i-1])
 }
+#GODISNJI CIST PRINOS
+# GODISNJI NET RETURN (cisti prinos)
 
+#prvo moraju da se naprave kolone u dataframe-u
+NTDOY_yearly$NetReturn_Open<-0
+NTDOY_yearly$NetReturn_High<-0
+NTDOY_yearly$NetReturn_Low<-0
+NTDOY_yearly$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(NTDOY_yearly)){
+  NTDOY_yearly$NetReturn_Open[i]<-(NTDOY_yearly$yearly_open[i]-NTDOY_yearly$yearly_open[i-1])/NTDOY_yearly$yearly_open[i-1]
+  NTDOY_yearly$NetReturn_High[i]<-(NTDOY_yearly$yearly_high[i]-NTDOY_yearly$yearly_high[i-1])/NTDOY_yearly$yearly_high[i-1]
+  NTDOY_yearly$NetReturn_Low[i]<-(NTDOY_yearly$yearly_low[i]-NTDOY_yearly$yearly_low[i-1])/NTDOY_yearly$yearly_low[i-1]
+  NTDOY_yearly$NetReturn_Last[i]<-(NTDOY_yearly$yearly_close[i]-NTDOY_yearly$yearly_close[i-1])/NTDOY_yearly$yearly_close[i-1]
+}
+
+#net returns ukupno od godisnjeg, VOLATILNOST PRINOSA
+NTDOY_yearly$NetReturns_Open_UK <- "/"
+NTDOY_yearly$NetReturns_Open_UK[1] <- sd(NTDOY_yearly$NetReturn_Open)
+NTDOY_yearly$NetReturns_High_UK <- "/"
+NTDOY_yearly$NetReturns_High_UK[1] <- sd(NTDOY_yearly$NetReturn_High)
+NTDOY_yearly$NetReturns_Low_UK<- "/"
+NTDOY_yearly$NetReturns_Low_UK[1] <- sd(NTDOY_yearly$NetReturn_Low)
+NTDOY_yearly$NetReturns_Last_UK<- "/"
+NTDOY_yearly$NetReturns_Last_UK[1] <- sd(NTDOY_yearly$NetReturn_Last)
 #--------------------------------------------------------------------------------------------------------------
 # Calculating yearly volatility using standard deviation of log returns (volatilnost po godinama)
 #--------------------------------------------------------------------------------------------------------------
@@ -327,20 +400,80 @@ NTDOY$MA252 <- rollmean(NTDOY$Last, k = 252, fill = NA)
 
 ggplot(NTDOY, aes(x = Date, y = Last,group = 1)) + geom_line() + labs(x = "Date", y = "Price", title = "Raw Prices")
 
+
+#------------------
 ggplot(NTDOY, aes(x = Date, y = Last,group = 1)) +
   geom_line() +
-  geom_line(aes(y = MA5,group = 1), color = "blue", linetype = "dashed") +
-  geom_line(aes(y = MA21,group = 1), color = "green", linetype = "dashed") +
-  geom_line(aes(y = MA63,group = 1), color = "red", linetype = "dashed") +
-  geom_line(aes(y = MA126,group = 1), color = "yellow", linetype = "dashed") +
-  geom_line(aes(y = MA252,group = 1), color = "magenta", linetype = "dashed") +
+  geom_line(aes(y = MA5,group = 1), color = "blue", linetype = "solid") +
+  geom_line(aes(y = MA21,group = 1), color = "green", linetype = "solid") +
+  geom_line(aes(y = MA63,group = 1), color = "red", linetype = "solid") +
+  geom_line(aes(y = MA126,group = 1), color = "yellow", linetype = "solid") +
+  geom_line(aes(y = MA252,group = 1), color = "magenta", linetype = "solid") +
   labs(x = "Date", y = "Price", title = "Moving Averages") +
   scale_linetype_manual(values = c("solid", "dashed", "dotted"))
+
 
 #--------------------------------------------------------------------------------------------------------------
 # Using all the gathered information from descriptive measures, returns and moving averages,
 # rating companies based on price levels of their stock
 #--------------------------------------------------------------------------------------------------------------
+
+# prinose (i log i net) iscrtati na line grafiku sa 5 podgrafika:
+# prinos open cene
+# prinos high
+# prinos low
+# prinos close
+# prinos candlestick (OVAJ DEO NE MOZE DA SE URADI, NE MOGU DA NADJEM NACIN DA SPOJIM LINECHART SA CANDLESTICK CHARTOM)
+
+#DNEVNI
+# Grafikon (Log Return)
+plot(NTDOY$LogReturn_Open, type="l", col="red", xlab="Dan", ylab="Log return", main="NTDOY Open, Close, High i Low Log Return")
+lines(NTDOY$LogReturn_High, type="l", col="blue")
+lines(NTDOY$LogReturn_Low, type="l", col="green")
+lines(NTDOY$LogReturn_Last, type="l", col="purple")
+
+# Legenda za grafikone
+legend("topright", legend=c("Open", "High", "Low", "Close"), col=c("red", "blue", "green", "purple"), lty=1)
+
+##### sa candlestickom ---------NE RADI
+
+# Učitavanje potrebnih paketa
+library(ggplot2)
+install.packages("reshape2")
+library(reshape2)
+install.packages("tidyquant")
+library(tidyquant)
+
+#****-------------------------------------------------------------------------------------------------------------------------------------------------------
+# Reshapeovanje podataka
+NTDOY.m <- melt(NTDOY[,c("Date", "LogReturn_Open", "LogReturn_Last", "LogReturn_High", "LogReturn_Low")], id.vars = "Date")
+
+# Kreiranje grafikona sa sve četiri cene i candlestick chart-om
+ggplot(NTDOY.m, aes(Date, value)) +
+  geom_line(data = subset(NTDOY.m, variable %in% c("LogReturn_Open", "LogReturn_Last", "LogReturn_High", "LogReturn_Low")), aes(color = variable)) +
+  geom_candlestick(data = NTDOY, aes(x = Date, open = LogReturn_Open, high = LogReturn_High, low = LogReturn_Low, close = LogReturn_Last), fill = "red", color = "black") +
+  scale_color_manual(values = c("red", "blue", "green", "purple")) +
+  labs(title = "NTDOY Open, Close, High i Low sa Candlestick Chart-om", x = "Datum", y = "Cena") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+#***-------------------------------------------------------------------------------------------------------------------------------------------------
+# Grafikon (Net Return)
+plot(NTDOY$NetReturn_Open, type="l", col="red", xlab="Dan", ylab="Net return", main="NTDOY Open, Close, High i Low Net Return")
+lines(NTDOY$NetReturn_High, type="l", col="blue")
+lines(NTDOY$NetReturn_Low, type="l", col="green")
+lines(NTDOY$NetReturn_Last, type="l", col="purple")
+
+# Legenda za grafikone
+legend("topright", legend=c("Open", "High", "Low", "Close"), col=c("red", "blue", "green", "purple"), lty=1)
+
+
+
+
+
+
+
+
+
 
 
 

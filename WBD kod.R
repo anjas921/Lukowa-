@@ -32,6 +32,22 @@ for(i in 2:nrow(WBD)){
   WBD$LogReturn_Last[i]<-log(WBD$Last[i]/WBD$Last[i-1])
 }
 
+#CIST PRINOS
+# DNEVNI NET RETURN (cisti prinos)
+
+#prvo moraju da se naprave kolone u dataframe-u
+WBD$NetReturn_Open<-0
+WBD$NetReturn_High<-0
+WBD$NetReturn_Low<-0
+WBD$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(WBD)){
+  WBD$NetReturn_Open[i]<-(WBD$Open[i]-WBD$Open[i-1])/WBD$Open[i-1]
+  WBD$NetReturn_High[i]<-(WBD$High[i]-WBD$High[i-1])/WBD$High[i-1]
+  WBD$NetReturn_Low[i]<-(WBD$Low[i]-WBD$Low[i-1])/WBD$Low[i-1]
+  WBD$NetReturn_Last[i]<-(WBD$Last[i]-WBD$Last[i-1])/WBD$Last[i-1]
+}
 # ///////////////////////////
 
 # grupisanje podataka po nedeljama
@@ -79,6 +95,25 @@ for(i in 2:nrow(WBD_weekly)){
   WBD_weekly$LogReturn_Close[i]<-log(WBD_weekly$weekly_close[i]/WBD_weekly$weekly_close[i-1])
 }
 
+
+#NEDELJNI CIST PRINOS
+# NEDELJNI NET RETURN (cisti prinos)
+
+#prvo moraju da se naprave kolone u dataframe-u
+WBD_weekly$NetReturn_Open<-0
+WBD_weekly$NetReturn_High<-0
+WBD_weekly$NetReturn_Low<-0
+WBD_weekly$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(WBD_weekly)){
+  WBD_weekly$NetReturn_Open[i]<-(WBD_weekly$weekly_open[i]-WBD_weekly$weekly_open[i-1])/WBD_weekly$weekly_open[i-1]
+  WBD_weekly$NetReturn_High[i]<-(WBD_weekly$weekly_high[i]-WBD_weekly$weekly_high[i-1])/WBD_weekly$weekly_high[i-1]
+  WBD_weekly$NetReturn_Low[i]<-(WBD_weekly$weekly_low[i]-WBD_weekly$weekly_low[i-1])/WBD_weekly$weekly_low[i-1]
+  WBD_weekly$NetReturn_Last[i]<-(WBD_weekly$weekly_close[i]-WBD_weekly$weekly_close[i-1])/WBD_weekly$weekly_close[i-1]
+}
+
+
 # ///////////////////////////
 
 # Ucitaj pakete
@@ -124,6 +159,21 @@ for(i in 2:nrow(WBD_monthly)){
   WBD_monthly$LogReturn_Close[i]<-log(WBD_monthly$monthly_close[i]/WBD_monthly$monthly_close[i-1])
 }
 
+## MESECNI NET RETURN (cisti prinos)
+
+#prvo moraju da se naprave kolone u dataframe-u
+WBD_monthly$NetReturn_Open<-0
+WBD_monthly$NetReturn_High<-0
+WBD_monthly$NetReturn_Low<-0
+WBD_monthly$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(WBD_monthly)){
+  WBD_monthly$NetReturn_Open[i]<-(WBD_monthly$monthly_open[i]-WBD_monthly$monthly_open[i-1])/WBD_monthly$monthly_open[i-1]
+  WBD_monthly$NetReturn_High[i]<-(WBD_monthly$monthly_high[i]-WBD_monthly$monthly_high[i-1])/WBD_monthly$monthly_high[i-1]
+  WBD_monthly$NetReturn_Low[i]<-(WBD_monthly$monthly_low[i]-WBD_monthly$monthly_low[i-1])/WBD_monthly$monthly_low[i-1]
+  WBD_monthly$NetReturn_Last[i]<-(WBD_monthly$monthly_close[i]-WBD_monthly$monthly_close[i-1])/WBD_monthly$monthly_close[i-1]
+}
 # ///////////////////////////
 
 # Ucitaj pakete
@@ -162,6 +212,34 @@ for(i in 2:nrow(WBD_yearly)){
   WBD_yearly$LogReturn_Low[i]<-log(WBD_yearly$yearly_low[i]/WBD_yearly$yearly_low[i-1])
   WBD_yearly$LogReturn_Close[i]<-log(WBD_yearly$yearly_close[i]/WBD_yearly$yearly_close[i-1])
 }
+
+#GODISNJI CIST PRINOS
+# GODISNJI NET RETURN (cisti prinos)
+
+#prvo moraju da se naprave kolone u dataframe-u
+WBD_yearly$NetReturn_Open<-0
+WBD_yearly$NetReturn_High<-0
+WBD_yearly$NetReturn_Low<-0
+WBD_yearly$NetReturn_Last<-0
+
+#sad se dodaju vrednosti tim kolonama
+for(i in 2:nrow(WBD_yearly)){
+  WBD_yearly$NetReturn_Open[i]<-(WBD_yearly$yearly_open[i]-WBD_yearly$yearly_open[i-1])/WBD_yearly$yearly_open[i-1]
+  WBD_yearly$NetReturn_High[i]<-(WBD_yearly$yearly_high[i]-WBD_yearly$yearly_high[i-1])/WBD_yearly$yearly_high[i-1]
+  WBD_yearly$NetReturn_Low[i]<-(WBD_yearly$yearly_low[i]-WBD_yearly$yearly_low[i-1])/WBD_yearly$yearly_low[i-1]
+  WBD_yearly$NetReturn_Last[i]<-(WBD_yearly$yearly_close[i]-WBD_yearly$yearly_close[i-1])/WBD_yearly$yearly_close[i-1]
+}
+
+
+#net returns ukupno od godisnjeg, VOLATILNOST PRINOSA
+WBD_yearly$NetReturns_Open_UK <- "/"
+WBD_yearly$NetReturns_Open_UK[1] <- sd(WBD_yearly$NetReturn_Open)
+WBD_yearly$NetReturns_High_UK <- "/"
+WBD_yearly$NetReturns_High_UK[1] <- sd(WBD_yearly$NetReturn_High)
+WBD_yearly$NetReturns_Low_UK<- "/"
+WBD_yearly$NetReturns_Low_UK[1] <- sd(WBD_yearly$NetReturn_Low)
+WBD_yearly$NetReturns_Last_UK<- "/"
+WBD_yearly$NetReturns_Last_UK[1] <- sd(WBD_yearly$NetReturn_Last)
 
 #--------------------------------------------------------------------------------------------------------------
 # Calculating yearly volatility using standard deviation of log returns (volatilnost po godinama)
@@ -327,29 +405,70 @@ WBD$MA252 <- rollmean(WBD$Last, k = 252, fill = NA)
 
 ggplot(WBD, aes(x = Date, y = Last,group = 1)) + geom_line() + labs(x = "Date", y = "Price", title = "Raw Prices")
 
+#------------------
 ggplot(WBD, aes(x = Date, y = Last,group = 1)) +
   geom_line() +
-  geom_line(aes(y = MA5,group = 1), color = "blue", linetype = "dashed") +
-  geom_line(aes(y = MA21,group = 1), color = "green", linetype = "dashed") +
-  geom_line(aes(y = MA63,group = 1), color = "red", linetype = "dashed") +
-  geom_line(aes(y = MA126,group = 1), color = "yellow", linetype = "dashed") +
-  geom_line(aes(y = MA252,group = 1), color = "magenta", linetype = "dashed") +
+  geom_line(aes(y = MA5,group = 1), color = "blue", linetype = "solid") +
+  geom_line(aes(y = MA21,group = 1), color = "green", linetype = "solid") +
+  geom_line(aes(y = MA63,group = 1), color = "red", linetype = "solid") +
+  geom_line(aes(y = MA126,group = 1), color = "yellow", linetype = "solid") +
+  geom_line(aes(y = MA252,group = 1), color = "magenta", linetype = "solid") +
   labs(x = "Date", y = "Price", title = "Moving Averages") +
   scale_linetype_manual(values = c("solid", "dashed", "dotted"))
+
 
 #--------------------------------------------------------------------------------------------------------------
 # Using all the gathered information from descriptive measures, returns and moving averages,
 # rating companies based on price levels of their stock
 #--------------------------------------------------------------------------------------------------------------
 
+# prinose (i log i net) iscrtati na line grafiku sa 5 podgrafika:
+# prinos open cene
+# prinos high
+# prinos low
+# prinos close
+# prinos candlestick (OVAJ DEO NE MOZE DA SE URADI, NE MOGU DA NADJEM NACIN DA SPOJIM LINECHART SA CANDLESTICK CHARTOM)
 
+#DNEVNI
+# Grafikon (Log Return)
+plot(WBD$LogReturn_Open, type="l", col="red", xlab="Dan", ylab="Log return", main="WBD Open, Close, High i Low Log Return")
+lines(WBD$LogReturn_High, type="l", col="blue")
+lines(WBD$LogReturn_Low, type="l", col="green")
+lines(WBD$LogReturn_Last, type="l", col="purple")
 
+# Legenda za grafikone
+legend("topright", legend=c("Open", "High", "Low", "Close"), col=c("red", "blue", "green", "purple"), lty=1)
 
+##### sa candlestickom ---------NE RADI
 
+# Učitavanje potrebnih paketa
+library(ggplot2)
+install.packages("reshape2")
+library(reshape2)
+install.packages("tidyquant")
+library(tidyquant)
 
+#****-------------------------------------------------------------------------------------------------------------------------------------------------------
+# Reshapeovanje podataka
+WBD.m <- melt(WBD[,c("Date", "LogReturn_Open", "LogReturn_Last", "LogReturn_High", "LogReturn_Low")], id.vars = "Date")
 
+# Kreiranje grafikona sa sve četiri cene i candlestick chart-om
+ggplot(WBD.m, aes(Date, value)) +
+  geom_line(data = subset(WBD.m, variable %in% c("LogReturn_Open", "LogReturn_Last", "LogReturn_High", "LogReturn_Low")), aes(color = variable)) +
+  geom_candlestick(data = WBD, aes(x = Date, open = LogReturn_Open, high = LogReturn_High, low = LogReturn_Low, close = LogReturn_Last), fill = "red", color = "black") +
+  scale_color_manual(values = c("red", "blue", "green", "purple")) +
+  labs(title = "WBD Open, Close, High i Low sa Candlestick Chart-om", x = "Datum", y = "Cena") +
+  theme(plot.title = element_text(hjust = 0.5))
 
+#***-------------------------------------------------------------------------------------------------------------------------------------------------
+# Grafikon (Net Return)
+plot(WBD$NetReturn_Open, type="l", col="red", xlab="Dan", ylab="Net return", main="WBD Open, Close, High i Low Net Return")
+lines(WBD$NetReturn_High, type="l", col="blue")
+lines(WBD$NetReturn_Low, type="l", col="green")
+lines(WBD$NetReturn_Last, type="l", col="purple")
 
+# Legenda za grafikone
+legend("topright", legend=c("Open", "High", "Low", "Close"), col=c("red", "blue", "green", "purple"), lty=1)
 
 
 
