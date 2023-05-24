@@ -29,35 +29,36 @@ rownames(ATVI_descriptive_statistics) <- c("MEAN","MEDIAN", "SKEWNESS", "KURTOSI
 
 # DNEVNI LOG RETURN (ovo proveriti posto nisam siguran jer sam to radio ranije)
 #prvo moraju da se naprave kolone u dataframe-u
-ATVI$LogReturn_Open<-0
-ATVI$LogReturn_High<-0
-ATVI$LogReturn_Low<-0
-ATVI$LogReturn_Last<-0
+
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(ATVI)){
-  ATVI$LogReturn_Open[i]<-log(ATVI$Open[i]/ATVI$Open[i-1])
-  ATVI$LogReturn_High[i]<-log(ATVI$High[i]/ATVI$High[i-1])
-  ATVI$LogReturn_Low[i]<-log(ATVI$Low[i]/ATVI$Low[i-1])
-  ATVI$LogReturn_Last[i]<-log(ATVI$Last[i]/ATVI$Last[i-1])
+for(i in 1:nrow(ATVI)){
+  ATVI$LogReturn_Open[i]<-log(ATVI$Open[i+1]/ATVI$Open[i])
+  ATVI$LogReturn_High[i]<-log(ATVI$High[i+1]/ATVI$High[i])
+  ATVI$LogReturn_Low[i]<-log(ATVI$Low[i+1]/ATVI$Low[i])
+  ATVI$LogReturn_Last[i]<-log(ATVI$Last[i+1]/ATVI$Last[i])
 }
+ATVI$LogReturn_Open[2517]<-0
+ATVI$LogReturn_High[2517]<-0
+ATVI$LogReturn_Low[2517]<-0
+ATVI$LogReturn_Last[2517]<-0
 
 # DNEVNI NET RETURN (cisti prinos)
 
 #prvo moraju da se naprave kolone u dataframe-u
-ATVI$NetReturn_Open<-0
-ATVI$NetReturn_High<-0
-ATVI$NetReturn_Low<-0
-ATVI$NetReturn_Last<-0
+
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(ATVI)){
-  ATVI$NetReturn_Open[i]<-(ATVI$Open[i]-ATVI$Open[i-1])/ATVI$Open[i-1]
-  ATVI$NetReturn_High[i]<-(ATVI$High[i]-ATVI$High[i-1])/ATVI$High[i-1]
-  ATVI$NetReturn_Low[i]<-(ATVI$Low[i]-ATVI$Low[i-1])/ATVI$Low[i-1]
-  ATVI$NetReturn_Last[i]<-(ATVI$Last[i]-ATVI$Last[i-1])/ATVI$Last[i-1]
+for(i in 1:nrow(ATVI)){
+  ATVI$NetReturn_Open[i]<-(ATVI$Open[i+1]-ATVI$Open[i])/ATVI$Open[i]
+  ATVI$NetReturn_High[i]<-(ATVI$High[i+1]-ATVI$High[i])/ATVI$High[i]
+  ATVI$NetReturn_Low[i]<-(ATVI$Low[i+1]-ATVI$Low[i])/ATVI$Low[i]
+  ATVI$NetReturn_Last[i]<-(ATVI$Last[i+1]-ATVI$Last[i])/ATVI$Last[i]
 }
-
+ATVI$NetReturn_Open[2517]<-0
+ATVI$NetReturn_High[2517]<-0
+ATVI$NetReturn_Low[2517]<-0
+ATVI$NetReturn_Last[2517]<-0
 # ///////////////////////////
 
 # grupisanje podataka po nedeljama
@@ -91,20 +92,23 @@ print(ATVI_weekly)
 library(SciViews)
 
 #prvo moraju da se naprave kolone u dataframe-u
-
 ATVI_weekly$LogReturn_Open<-0
 ATVI_weekly$LogReturn_High<-0
 ATVI_weekly$LogReturn_Low<-0
 ATVI_weekly$LogReturn_Close<-0
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(ATVI_weekly)){
-  ATVI_weekly$LogReturn_Open[i]<-log(ATVI_weekly$weekly_open[i]/ATVI_weekly$weekly_open[i-1])
-  ATVI_weekly$LogReturn_High[i]<-log(ATVI_weekly$weekly_high[i]/ATVI_weekly$weekly_high[i-1])
-  ATVI_weekly$LogReturn_Low[i]<-log(ATVI_weekly$weekly_low[i]/ATVI_weekly$weekly_low[i-1])
-  ATVI_weekly$LogReturn_Close[i]<-log(ATVI_weekly$weekly_close[i]/ATVI_weekly$weekly_close[i-1])
+for(i in 1:nrow(ATVI_weekly)){
+  ATVI_weekly$LogReturn_Open[i]<-log(ATVI_weekly$weekly_open[i+1]/ATVI_weekly$weekly_open[i])
+  ATVI_weekly$LogReturn_High[i]<-log(ATVI_weekly$weekly_high[i+1]/ATVI_weekly$weekly_high[i])
+  ATVI_weekly$LogReturn_Low[i]<-log(ATVI_weekly$weekly_low[i+1]/ATVI_weekly$weekly_low[i])
+  ATVI_weekly$LogReturn_Close[i]<-log(ATVI_weekly$weekly_close[i+1]/ATVI_weekly$weekly_close[i])
 }
 
+ATVI_weekly$LogReturn_Open[528]<-0
+ATVI_weekly$LogReturn_High[528]<-0
+ATVI_weekly$LogReturn_Low[528]<-0
+ATVI_weekly$LogReturn_Close[528]<-0
 # NEDELJNI NET RETURN (cisti prinos)
 
 #prvo moraju da se naprave kolone u dataframe-u
@@ -114,12 +118,16 @@ ATVI_weekly$NetReturn_Low<-0
 ATVI_weekly$NetReturn_Last<-0
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(ATVI_weekly)){
-  ATVI_weekly$NetReturn_Open[i]<-(ATVI_weekly$weekly_open[i]-ATVI_weekly$weekly_open[i-1])/ATVI_weekly$weekly_open[i-1]
-  ATVI_weekly$NetReturn_High[i]<-(ATVI_weekly$weekly_high[i]-ATVI_weekly$weekly_high[i-1])/ATVI_weekly$weekly_high[i-1]
-  ATVI_weekly$NetReturn_Low[i]<-(ATVI_weekly$weekly_low[i]-ATVI_weekly$weekly_low[i-1])/ATVI_weekly$weekly_low[i-1]
-  ATVI_weekly$NetReturn_Last[i]<-(ATVI_weekly$weekly_close[i]-ATVI_weekly$weekly_close[i-1])/ATVI_weekly$weekly_close[i-1]
+for(i in 1:nrow(ATVI_weekly)){
+  ATVI_weekly$NetReturn_Open[i]<-(ATVI_weekly$weekly_open[i]-ATVI_weekly$weekly_open[i])/ATVI_weekly$weekly_open[i]
+  ATVI_weekly$NetReturn_High[i]<-(ATVI_weekly$weekly_high[i]-ATVI_weekly$weekly_high[i])/ATVI_weekly$weekly_high[i]
+  ATVI_weekly$NetReturn_Low[i]<-(ATVI_weekly$weekly_low[i]-ATVI_weekly$weekly_low[i])/ATVI_weekly$weekly_low[i]
+  ATVI_weekly$NetReturn_Last[i]<-(ATVI_weekly$weekly_close[i]-ATVI_weekly$weekly_close[i])/ATVI_weekly$weekly_close[i]
 }
+ATVI_weekly$NetReturn_Open[528]<-0
+ATVI_weekly$NetReturn_High[528]<-0
+ATVI_weekly$NetReturn_Low[528]<-0
+ATVI_weekly$NetReturn_Last[528]<-0
 # ///////////////////////////
 
 # Ucitaj pakete
@@ -147,7 +155,7 @@ ATVI_monthly
 # MESECNI LOG RETURN
 
 
-############## NOVO RESENJE (mesecni) ################
+####]######### NOVO RESENJE (mesecni) ################
 
 library(SciViews)
 
@@ -158,12 +166,16 @@ ATVI_monthly$LogReturn_Low<-0
 ATVI_monthly$LogReturn_Close<-0
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(ATVI_monthly)){
-  ATVI_monthly$LogReturn_Open[i]<-log(ATVI_monthly$monthly_open[i]/ATVI_monthly$monthly_open[i-1])
-  ATVI_monthly$LogReturn_High[i]<-log(ATVI_monthly$monthly_high[i]/ATVI_monthly$monthly_high[i-1])
-  ATVI_monthly$LogReturn_Low[i]<-log(ATVI_monthly$monthly_low[i]/ATVI_monthly$monthly_low[i-1])
-  ATVI_monthly$LogReturn_Close[i]<-log(ATVI_monthly$monthly_close[i]/ATVI_monthly$monthly_close[i-1])
+for(i in 1:nrow(ATVI_monthly)){
+  ATVI_monthly$LogReturn_Open[i]<-log(ATVI_monthly$monthly_open[i+1]/ATVI_monthly$monthly_open[i])
+  ATVI_monthly$LogReturn_High[i]<-log(ATVI_monthly$monthly_high[i+1]/ATVI_monthly$monthly_high[i])
+  ATVI_monthly$LogReturn_Low[i]<-log(ATVI_monthly$monthly_low[i+1]/ATVI_monthly$monthly_low[i])
+  ATVI_monthly$LogReturn_Close[i]<-log(ATVI_monthly$monthly_close[i+1]/ATVI_monthly$monthly_close[i])
 }
+ATVI_monthly$LogReturn_Open[120]<-0
+ATVI_monthly$LogReturn_High[120]<-0
+ATVI_monthly$LogReturn_Low[120]<-0
+ATVI_monthly$LogReturn_Close[120]<-0
 
 # MESECNI NET RETURN (cisti prinos)
 
@@ -174,12 +186,16 @@ ATVI_monthly$NetReturn_Low<-0
 ATVI_monthly$NetReturn_Last<-0
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(ATVI_monthly)){
-  ATVI_monthly$NetReturn_Open[i]<-(ATVI_monthly$monthly_open[i]-ATVI_monthly$monthly_open[i-1])/ATVI_monthly$monthly_open[i-1]
-  ATVI_monthly$NetReturn_High[i]<-(ATVI_monthly$monthly_high[i]-ATVI_monthly$monthly_high[i-1])/ATVI_monthly$monthly_high[i-1]
-  ATVI_monthly$NetReturn_Low[i]<-(ATVI_monthly$monthly_low[i]-ATVI_monthly$monthly_low[i-1])/ATVI_monthly$monthly_low[i-1]
-  ATVI_monthly$NetReturn_Last[i]<-(ATVI_monthly$monthly_close[i]-ATVI_monthly$monthly_close[i-1])/ATVI_monthly$monthly_close[i-1]
+for(i in 1:nrow(ATVI_monthly)){
+  ATVI_monthly$NetReturn_Open[i]<-(ATVI_monthly$monthly_open[i+1]-ATVI_monthly$monthly_open[i])/ATVI_monthly$monthly_open[i]
+  ATVI_monthly$NetReturn_High[i]<-(ATVI_monthly$monthly_high[i+1]-ATVI_monthly$monthly_high[i])/ATVI_monthly$monthly_high[i]
+  ATVI_monthly$NetReturn_Low[i]<-(ATVI_monthly$monthly_low[i+1]-ATVI_monthly$monthly_low[i])/ATVI_monthly$monthly_low[i]
+  ATVI_monthly$NetReturn_Last[i]<-(ATVI_monthly$monthly_close[i+1]-ATVI_monthly$monthly_close[i])/ATVI_monthly$monthly_close[i]
 }
+ATVI_monthly$NetReturn_Open[120]<-0
+ATVI_monthly$NetReturn_High[120]<-0
+ATVI_monthly$NetReturn_Low[120]<-0
+ATVI_monthly$NetReturn_Last[120]<-0
 
 # ///////////////////////////
 
@@ -193,7 +209,9 @@ ATVI_yearly <- ATVI %>%
   summarise(yearly_open = first(Open),
             yearly_high = max(High),
             yearly_low = min(Low),
-            yearly_close = last(Last))
+            yearly_close = last(Last),
+            yearly_first_close=first(Last),
+            yearly_last_close= last(Last))
 
 # Prikazi rezultate
 ATVI_yearly
@@ -204,6 +222,12 @@ ATVI_yearly
 
 ############## NOVO RESENJE (godisnji) ################
 
+ATVI_yearly$LogReturn_rtns <- 0
+#-----------------------------------------------------------------------------------
+for(i in 1:nrow(ATVI_yearly)){
+  ATVI_yearly$LogReturn_rtns[i]<-log(ATVI_yearly$yearly_last_close[i]/ATVI_yearly$yearly_first_close[i])
+}
+#------------------------------------------------------------------------------------------
 library(SciViews)
 
 #prvo moraju da se naprave kolone u dataframe-u
@@ -213,12 +237,17 @@ ATVI_yearly$LogReturn_Low<-0
 ATVI_yearly$LogReturn_Close<-0
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(ATVI_yearly)){
-  ATVI_yearly$LogReturn_Open[i]<-log(ATVI_yearly$yearly_open[i]/ATVI_yearly$yearly_open[i-1])
-  ATVI_yearly$LogReturn_High[i]<-log(ATVI_yearly$yearly_high[i]/ATVI_yearly$yearly_high[i-1])
-  ATVI_yearly$LogReturn_Low[i]<-log(ATVI_yearly$yearly_low[i]/ATVI_yearly$yearly_low[i-1])
-  ATVI_yearly$LogReturn_Close[i]<-log(ATVI_yearly$yearly_close[i]/ATVI_yearly$yearly_close[i-1])
+for(i in 1:nrow(ATVI_yearly)){
+  ATVI_yearly$LogReturn_Open[i]<-log(ATVI_yearly$yearly_open[i+1]/ATVI_yearly$yearly_open[i])
+  ATVI_yearly$LogReturn_High[i]<-log(ATVI_yearly$yearly_high[i+1]/ATVI_yearly$yearly_high[i])
+  ATVI_yearly$LogReturn_Low[i]<-log(ATVI_yearly$yearly_low[i+1]/ATVI_yearly$yearly_low[i])
+  ATVI_yearly$LogReturn_Close[i]<-log(ATVI_yearly$yearly_close[i+1]/ATVI_yearly$yearly_close[i])
 }
+#prvo moraju da se naprave kolone u dataframe-u
+ATVI_yearly$LogReturn_Open[10]<-0
+ATVI_yearly$LogReturn_High[10]<-0
+ATVI_yearly$LogReturn_Low[10]<-0
+ATVI_yearly$LogReturn_Close[10]<-0
 
 #prvo moraju da se naprave kolone u dataframe-u
 ATVI_yearly$NetReturn_Open<-0
@@ -227,11 +256,11 @@ ATVI_yearly$NetReturn_Low<-0
 ATVI_yearly$NetReturn_Last<-0
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(ATVI_yearly)){
-  ATVI_yearly$NetReturn_Open[i]<-(ATVI_yearly$yearly_open[i]-ATVI_yearly$yearly_open[i-1])/ATVI_yearly$yearly_open[i-1]
-  ATVI_yearly$NetReturn_High[i]<-(ATVI_yearly$yearly_high[i]-ATVI_yearly$yearly_high[i-1])/ATVI_yearly$yearly_high[i-1]
-  ATVI_yearly$NetReturn_Low[i]<-(ATVI_yearly$yearly_low[i]-ATVI_yearly$yearly_low[i-1])/ATVI_yearly$yearly_low[i-1]
-  ATVI_yearly$NetReturn_Last[i]<-(ATVI_yearly$yearly_close[i]-ATVI_yearly$yearly_close[i-1])/ATVI_yearly$yearly_close[i-1]
+for(i in 1:nrow(ATVI_yearly)){
+  ATVI_yearly$NetReturn_Open[i]<-(ATVI_yearly$yearly_open[i+1]-ATVI_yearly$yearly_open[i])/ATVI_yearly$yearly_open[i]
+  ATVI_yearly$NetReturn_High[i]<-(ATVI_yearly$yearly_high[i+1]-ATVI_yearly$yearly_high[i])/ATVI_yearly$yearly_high[i]
+  ATVI_yearly$NetReturn_Low[i]<-(ATVI_yearly$yearly_low[i+1]-ATVI_yearly$yearly_low[i])/ATVI_yearly$yearly_low[i]
+  ATVI_yearly$NetReturn_Last[i]<-(ATVI_yearly$yearly_close[i+1]-ATVI_yearly$yearly_close[i])/ATVI_yearly$yearly_close[i]
 }
 
 
@@ -278,7 +307,23 @@ ATVI_yearly_volatility <- ATVI %>%
 
 # Prikazi rezultate
 ATVI_yearly_volatility
+#------------------------------------------------------------------------------------------
+#NOVO
 
+library(dplyr)
+library(lubridate)
+
+# Grupisi po godini i izracunaj podatke
+ATVI_yearly_volatility <- ATVI %>%
+  group_by(year) %>%
+  summarise(log_return_open_volatility = sd(LogReturn_Open)* sqrt(252),
+            log_return_high_volatility = sd(LogReturn_High)* sqrt(252),
+            log_return_low_volatility = sd(LogReturn_Low)* sqrt(252),
+            log_return_close_volatility = sd(LogReturn_Last)* sqrt(252))
+
+# Prikazi rezultate
+ATVI_yearly_volatility
+#------------------------------------------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------------------------------------
 # Visualizing both returns and raw prices on graphs and charts

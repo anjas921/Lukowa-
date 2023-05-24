@@ -1,9 +1,9 @@
 #plot sa svom volatilnoscu po barovima
-total_volatility_df <- data.frame(c(ATVI_yearly_volatility$close_volatility), c(DIS_yearly_volatility$close_volatility),
-                  c(EA_yearly_volatility$close_volatility),c(NASDAQ_yearly_volatility$close_volatility),c(NFLX_yearly_volatility$close_volatility),
-                  c(NTDOY_yearly_volatility$close_volatility),c(NWS_yearly_volatility$close_volatility),c(PARA_yearly_volatility$close_volatility),
-                  c(SP500_yearly_volatility$close_volatility),c(TCEHY_yearly_volatility$close_volatility), c(TTWO_yearly_volatility$close_volatility),
-                  c(WBD_yearly_volatility$close_volatility),year , group = c(2013,2014, 2015,2016, 2017,2018,2019,2020, 2021, 2022))
+total_volatility_df <- data.frame(c(ATVI_yearly_volatility$log_return_close_volatility), c(DIS_yearly_volatility$log_return_close_volatility),
+                  c(EA_yearly_volatility$log_return_close_volatility),c(NASDAQ_yearly_volatility$log_return_close_volatility),c(NFLX_yearly_volatility$log_return_close_volatility),
+                  c(NTDOY_yearly_volatility$log_return_close_volatility),c(NWS_yearly_volatility$log_return_close_volatility),c(PARA_yearly_volatility$log_return_close_volatility),
+                  c(SP500_yearly_volatility$log_return_close_volatility),c(TCEHY_yearly_volatility$log_return_close_volatility), c(TTWO_yearly_volatility$log_return_close_volatility),
+                  c(WBD_yearly_volatility$log_return_close_volatility),year , group = c(2013,2014, 2015,2016, 2017,2018,2019,2020, 2021, 2022))
 total_volatility_df$group <-as.factor(total_volatility_df$group)
 colnames(total_volatility_df)<- c('ATVI', "DIS", "EA", 'NASDAQ', 'NFLX', 'NTDOY','NWS', 'PARA', 'SP500', 'TCEHY','TTWO', 'WBD','year','group')
 

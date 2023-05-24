@@ -26,15 +26,18 @@ NFLX$LogReturn_Low<-0
 NFLX$LogReturn_Last<-0
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(NFLX)){
-  NFLX$LogReturn_Open[i]<-log(NFLX$Open[i]/NFLX$Open[i-1])
-  NFLX$LogReturn_High[i]<-log(NFLX$High[i]/NFLX$High[i-1])
-  NFLX$LogReturn_Low[i]<-log(NFLX$Low[i]/NFLX$Low[i-1])
-  NFLX$LogReturn_Last[i]<-log(NFLX$Last[i]/NFLX$Last[i-1])
+for(i in 1:nrow(NFLX)){
+  NFLX$LogReturn_Open[i]<-log(NFLX$Open[i+1]/NFLX$Open[i])
+  NFLX$LogReturn_High[i]<-log(NFLX$High[i+1]/NFLX$High[i])
+  NFLX$LogReturn_Low[i]<-log(NFLX$Low[i+1]/NFLX$Low[i])
+  NFLX$LogReturn_Last[i]<-log(NFLX$Last[i+1]/NFLX$Last[i])
 }
 
-#CIST PRINOS
-# DNEVNI NET RETURN (cisti prinos)
+NFLX$LogReturn_Open[2518]<-0
+NFLX$LogReturn_High[2518]<-0
+NFLX$LogReturn_Low[2518]<-0
+NFLX$LogReturn_Last[2518]<-0
+
 
 #prvo moraju da se naprave kolone u dataframe-u
 NFLX$NetReturn_Open<-0
@@ -43,12 +46,17 @@ NFLX$NetReturn_Low<-0
 NFLX$NetReturn_Last<-0
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(NFLX)){
-  NFLX$NetReturn_Open[i]<-(NFLX$Open[i]-NFLX$Open[i-1])/NFLX$Open[i-1]
-  NFLX$NetReturn_High[i]<-(NFLX$High[i]-NFLX$High[i-1])/NFLX$High[i-1]
-  NFLX$NetReturn_Low[i]<-(NFLX$Low[i]-NFLX$Low[i-1])/NFLX$Low[i-1]
-  NFLX$NetReturn_Last[i]<-(NFLX$Last[i]-NFLX$Last[i-1])/NFLX$Last[i-1]
+for(i in 1:nrow(NFLX)){
+  NFLX$NetReturn_Open[i]<-(NFLX$Open[i+1]-NFLX$Open[i])/NFLX$Open[i]
+  NFLX$NetReturn_High[i]<-(NFLX$High[i+1]-NFLX$High[i])/NFLX$High[i]
+  NFLX$NetReturn_Low[i]<-(NFLX$Low[i+1]-NFLX$Low[i])/NFLX$Low[i]
+  NFLX$NetReturn_Last[i]<-(NFLX$Last[i+1]-NFLX$Last[i])/NFLX$Last[i]
 }
+NFLX$NetReturn_Open[2518]<-0
+NFLX$NetReturn_High[2518]<-0
+NFLX$NetReturn_Low[2518]<-0
+NFLX$NetReturn_Last[2518]<-0
+
 
 # ///////////////////////////
 
@@ -188,7 +196,9 @@ NFLX_yearly <- NFLX %>%
   summarise(yearly_open = first(Open),
             yearly_high = max(High),
             yearly_low = min(Low),
-            yearly_close = last(Last))
+            yearly_close = last(Last),
+            yearly_first_close=first(Last),
+            yearly_last_close= last(Last))
 
 # Prikazi rezultate
 NFLX_yearly
@@ -196,6 +206,18 @@ NFLX_yearly
 # /////////////////////////
 
 # GODISNJI LOG RETURN
+
+############## NOVO RESENJE (godisnji) ################
+
+NFLX_yearly$LogReturn_rtns <- 0
+#-----------------------------------------------------------------------------------
+for(i in 1:nrow(NFLX_yearly)){
+  NFLX_yearly$LogReturn_rtns[i]<-log(NFLX_yearly$yearly_last_close[i]/NFLX_yearly$yearly_first_close[i])
+}
+
+# /////////////////////////
+
+# GONFLXNJI LOG RETURN
 
 ############## NOVO RESENJE (godisnji) ################
 
@@ -215,8 +237,8 @@ for(i in 2:nrow(NFLX_yearly)){
   NFLX_yearly$LogReturn_Close[i]<-log(NFLX_yearly$yearly_close[i]/NFLX_yearly$yearly_close[i-1])
 }
 
-#GODISNJI CIST PRINOS
-# GODISNJI NET RETURN (cisti prinos)
+#GONFLXNJI CIST PRINOS
+# GONFLXNJI NET RETURN (cisti prinos)
 
 #prvo moraju da se naprave kolone u dataframe-u
 NFLX_yearly$NetReturn_Open<-0
@@ -275,8 +297,23 @@ NFLX_yearly_volatility <- NFLX %>%
 
 # Prikazi rezultate
 NFLX_yearly_volatility
+#-------------------------------------------------------------------------
+#NOVO
 
+library(dplyr)
+library(lubridate)
 
+# Grupisi po godini i izracunaj podatke
+NFLX_yearly_volatility <- NFLX %>%
+  group_by(year) %>%
+  summarise(log_return_open_volatility = sd(LogReturn_Open)* sqrt(252),
+            log_return_high_volatility = sd(LogReturn_High)* sqrt(252),
+            log_return_low_volatility = sd(LogReturn_Low)* sqrt(252),
+            log_return_close_volatility = sd(LogReturn_Last)* sqrt(252))
+
+# Prikazi rezultate
+NFLX_yearly_volatility
+#----------------------
 #--------------------------------------------------------------------------------------------------------------
 # Visualizing both returns and raw prices on graphs and charts
 #--------------------------------------------------------------------------------------------------------------

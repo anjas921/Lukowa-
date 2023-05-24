@@ -35,14 +35,18 @@ SP500$LogReturn_Low<-0
 SP500$LogReturn_Last<-0
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(SP500)){
-  SP500$LogReturn_Open[i]<-log(SP500$Open[i]/SP500$Open[i-1])
-  SP500$LogReturn_High[i]<-log(SP500$High[i]/SP500$High[i-1])
-  SP500$LogReturn_Low[i]<-log(SP500$Low[i]/SP500$Low[i-1])
-  SP500$LogReturn_Last[i]<-log(SP500$Last[i]/SP500$Last[i-1])
+for(i in 1:nrow(SP500)){
+  SP500$LogReturn_Open[i]<-log(SP500$Open[i+1]/SP500$Open[i])
+  SP500$LogReturn_High[i]<-log(SP500$High[i+1]/SP500$High[i])
+  SP500$LogReturn_Low[i]<-log(SP500$Low[i+1]/SP500$Low[i])
+  SP500$LogReturn_Last[i]<-log(SP500$Last[i+1]/SP500$Last[i])
 }
-#CIST PRINOS
-# DNEVNI NET RETURN (cisti prinos)
+
+SP500$LogReturn_Open[2517]<-0
+SP500$LogReturn_High[2517]<-0
+SP500$LogReturn_Low[2517]<-0
+SP500$LogReturn_Last[2517]<-0
+
 
 #prvo moraju da se naprave kolone u dataframe-u
 SP500$NetReturn_Open<-0
@@ -51,12 +55,16 @@ SP500$NetReturn_Low<-0
 SP500$NetReturn_Last<-0
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(SP500)){
-  SP500$NetReturn_Open[i]<-(SP500$Open[i]-SP500$Open[i-1])/SP500$Open[i-1]
-  SP500$NetReturn_High[i]<-(SP500$High[i]-SP500$High[i-1])/SP500$High[i-1]
-  SP500$NetReturn_Low[i]<-(SP500$Low[i]-SP500$Low[i-1])/SP500$Low[i-1]
-  SP500$NetReturn_Last[i]<-(SP500$Last[i]-SP500$Last[i-1])/SP500$Last[i-1]
+for(i in 1:nrow(SP500)){
+  SP500$NetReturn_Open[i]<-(SP500$Open[i+1]-SP500$Open[i])/SP500$Open[i]
+  SP500$NetReturn_High[i]<-(SP500$High[i+1]-SP500$High[i])/SP500$High[i]
+  SP500$NetReturn_Low[i]<-(SP500$Low[i+1]-SP500$Low[i])/SP500$Low[i]
+  SP500$NetReturn_Last[i]<-(SP500$Last[i+1]-SP500$Last[i])/SP500$Last[i]
 }
+SP500$NetReturn_Open[2517]<-0
+SP500$NetReturn_High[2517]<-0
+SP500$NetReturn_Low[2517]<-0
+SP500$NetReturn_Last[2517]<-0
 # ///////////////////////////
 
 # grupisanje podataka po nedeljama
@@ -193,10 +201,24 @@ SP500_yearly <- SP500 %>%
   summarise(yearly_open = first(Open),
             yearly_high = max(High),
             yearly_low = min(Low),
-            yearly_close = last(Last))
+            yearly_close = last(Last),
+            yearly_first_close=first(Last),
+            yearly_last_close= last(Last))
 
 # Prikazi rezultate
 SP500_yearly
+
+# /////////////////////////
+
+# GODISNJI LOG RETURN
+
+############## NOVO RESENJE (godisnji) ################
+
+SP500_yearly$LogReturn_rtns <- 0
+#-----------------------------------------------------------------------------------
+for(i in 1:nrow(SP500_yearly)){
+  SP500_yearly$LogReturn_rtns[i]<-log(SP500_yearly$yearly_last_close[i]/SP500_yearly$yearly_first_close[i])
+}
 
 # /////////////////////////
 
@@ -283,7 +305,22 @@ SP500_yearly_volatility <- SP500 %>%
 # Prikazi rezultate
 SP500_yearly_volatility
 
+#---------------------------------
+#NOVO
 
+library(dplyr)
+library(lubridate)
+
+# Grupisi po godini i izracunaj podatke
+SP500_yearly_volatility <- SP500 %>%
+  group_by(year) %>%
+  summarise(log_return_open_volatility = sd(LogReturn_Open)* sqrt(252),
+            log_return_high_volatility = sd(LogReturn_High)* sqrt(252),
+            log_return_low_volatility = sd(LogReturn_Low)* sqrt(252),
+            log_return_close_volatility = sd(LogReturn_Last)* sqrt(252))
+
+# Prikazi rezultate
+SP500_yearly_volatility
 #--------------------------------------------------------------------------------------------------------------
 # Visualizing both returns and raw prices on graphs and charts
 #--------------------------------------------------------------------------------------------------------------

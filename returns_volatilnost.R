@@ -1,9 +1,9 @@
 #volatilnost tabela svih
-total_df <- cbind(c(ATVI_yearly_volatility$close_volatility), c(DIS_yearly_volatility$close_volatility),
-                  c(EA_yearly_volatility$close_volatility),c(NASDAQ_yearly_volatility$close_volatility),c(NFLX_yearly_volatility$close_volatility),
-                  c(NTDOY_yearly_volatility$close_volatility),c(NWS_yearly_volatility$close_volatility),c(PARA_yearly_volatility$close_volatility),
-                  c(SP500_yearly_volatility$close_volatility),c(TCEHY_yearly_volatility$close_volatility), c(TTWO_yearly_volatility$close_volatility),
-                  c(WBD_yearly_volatility$close_volatility))
+total_df <- cbind(c(ATVI_yearly_volatility$log_return_close_volatility), c(DIS_yearly_volatility$log_return_close_volatility),
+                  c(EA_yearly_volatility$log_return_close_volatility),c(NASDAQ_yearly_volatility$log_return_close_volatility),c(NFLX_yearly_volatility$log_return_close_volatility),
+                  c(NTDOY_yearly_volatility$log_return_close_volatility),c(NWS_yearly_volatility$log_return_close_volatility),c(PARA_yearly_volatility$log_return_close_volatility),
+                  c(SP500_yearly_volatility$log_return_close_volatility),c(TCEHY_yearly_volatility$log_return_close_volatility), c(TTWO_yearly_volatility$log_return_close_volatility),
+                  c(WBD_yearly_volatility$log_return_close_volatility))
 colnames(total_df)<- c('V.ATVI', "V.DIS", "V.EA", 'V.NASDAQ', 'V.NFLX', 'V.NTDOY','V.NWS', 'V.PARA', 'V.SP500', 'V.TCEHY','V.TTWO', 'V.WBD')
 
 
@@ -17,10 +17,10 @@ total_df <- cbind(total_df,year=c(2013,2014, 2015,2016, 2017,2018,2019,2020, 202
  # geom_bar(aes(x = 2013)) 
 
 #returns tabela svih
-total_rtns_df <- cbind(ATVI_yearly$NetReturn_Last,DIS_yearly$NetReturn_Last,EA_yearly$NetReturn_Last,
-                       NASDAQ_yearly$NetReturn_Last, NFLX_yearly$NetReturn_Last, NTDOY_yearly$NetReturn_Last, NWS_yearly$NetReturn_Last,
-                       PARA_yearly$NetReturn_Last, SP500_yearly$NetReturn_Last, TCEHY_yearly$NetReturn_Last, TTWO_yearly$NetReturn_Last,
-                       WBD_yearly$NetReturn_Last)
+total_rtns_df <- cbind(ATVI_yearly$LogReturn_rtns,DIS_yearly$LogReturn_rtns,EA_yearly$LogReturn_rtns,
+                       NASDAQ_yearly$LogReturn_rtns, NFLX_yearly$LogReturn_rtns, NTDOY_yearly$LogReturn_rtns, NWS_yearly$LogReturn_rtns,
+                       PARA_yearly$LogReturn_rtns, SP500_yearly$LogReturn_rtns, TCEHY_yearly$LogReturn_rtns, TTWO_yearly$LogReturn_rtns,
+                       WBD_yearly$LogReturn_rtns)
 
 year <- c(2013,2014, 2015,2016, 2017,2018,2019,2020, 2021, 2022)
 total_rtns_df <- cbind(total_rtns_df,year=c(2013,2014, 2015,2016, 2017,2018,2019,2020, 2021, 2022))
@@ -33,6 +33,7 @@ colnames(total_rtns_df)<- c("R.ATVI", "R.DIS", "R.EA", 'R.NASDAQ', 'R.NFLX', 'R.
 
 #---------------------------------------------------------- primer
 # Load the ggplot2 package
+
 library(ggplot2)
 
 

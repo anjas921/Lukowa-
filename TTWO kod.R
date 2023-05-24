@@ -25,15 +25,18 @@ TTWO$LogReturn_Low<-0
 TTWO$LogReturn_Last<-0
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(TTWO)){
-  TTWO$LogReturn_Open[i]<-log(TTWO$Open[i]/TTWO$Open[i-1])
-  TTWO$LogReturn_High[i]<-log(TTWO$High[i]/TTWO$High[i-1])
-  TTWO$LogReturn_Low[i]<-log(TTWO$Low[i]/TTWO$Low[i-1])
-  TTWO$LogReturn_Last[i]<-log(TTWO$Last[i]/TTWO$Last[i-1])
+for(i in 1:nrow(TTWO)){
+  TTWO$LogReturn_Open[i]<-log(TTWO$Open[i+1]/TTWO$Open[i])
+  TTWO$LogReturn_High[i]<-log(TTWO$High[i+1]/TTWO$High[i])
+  TTWO$LogReturn_Low[i]<-log(TTWO$Low[i+1]/TTWO$Low[i])
+  TTWO$LogReturn_Last[i]<-log(TTWO$Last[i+1]/TTWO$Last[i])
 }
 
-#CIST PRINOS
-# DNEVNI NET RETURN (cisti prinos)
+TTWO$LogReturn_Open[2518]<-0
+TTWO$LogReturn_High[2518]<-0
+TTWO$LogReturn_Low[2518]<-0
+TTWO$LogReturn_Last[2518]<-0
+
 
 #prvo moraju da se naprave kolone u dataframe-u
 TTWO$NetReturn_Open<-0
@@ -42,13 +45,16 @@ TTWO$NetReturn_Low<-0
 TTWO$NetReturn_Last<-0
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(TTWO)){
-  TTWO$NetReturn_Open[i]<-(TTWO$Open[i]-TTWO$Open[i-1])/TTWO$Open[i-1]
-  TTWO$NetReturn_High[i]<-(TTWO$High[i]-TTWO$High[i-1])/TTWO$High[i-1]
-  TTWO$NetReturn_Low[i]<-(TTWO$Low[i]-TTWO$Low[i-1])/TTWO$Low[i-1]
-  TTWO$NetReturn_Last[i]<-(TTWO$Last[i]-TTWO$Last[i-1])/TTWO$Last[i-1]
+for(i in 1:nrow(TTWO)){
+  TTWO$NetReturn_Open[i]<-(TTWO$Open[i+1]-TTWO$Open[i])/TTWO$Open[i]
+  TTWO$NetReturn_High[i]<-(TTWO$High[i+1]-TTWO$High[i])/TTWO$High[i]
+  TTWO$NetReturn_Low[i]<-(TTWO$Low[i+1]-TTWO$Low[i])/TTWO$Low[i]
+  TTWO$NetReturn_Last[i]<-(TTWO$Last[i+1]-TTWO$Last[i])/TTWO$Last[i]
 }
-
+TTWO$NetReturn_Open[2518]<-0
+TTWO$NetReturn_High[2518]<-0
+TTWO$NetReturn_Low[2518]<-0
+TTWO$NetReturn_Last[2518]<-0
 
 # ///////////////////////////
 
@@ -190,10 +196,24 @@ TTWO_yearly <- TTWO %>%
   summarise(yearly_open = first(Open),
             yearly_high = max(High),
             yearly_low = min(Low),
-            yearly_close = last(Last))
+            yearly_close = last(Last),
+            yearly_first_close=first(Last),
+            yearly_last_close= last(Last))
 
 # Prikazi rezultate
 TTWO_yearly
+
+# /////////////////////////
+
+# GODISNJI LOG RETURN
+
+############## NOVO RESENJE (godisnji) ################
+
+TTWO_yearly$LogReturn_rtns <- 0
+#-----------------------------------------------------------------------------------
+for(i in 1:nrow(TTWO_yearly)){
+  TTWO_yearly$LogReturn_rtns[i]<-log(TTWO_yearly$yearly_last_close[i]/TTWO_yearly$yearly_first_close[i])
+}
 
 # /////////////////////////
 
@@ -277,7 +297,22 @@ TTWO_yearly_volatility <- TTWO %>%
 
 # Prikazi rezultate
 TTWO_yearly_volatility
+#---------------------------------------
+#NOVO
 
+library(dplyr)
+library(lubridate)
+
+# Grupisi po godini i izracunaj podatke
+TTWO_yearly_volatility <- TTWO %>%
+  group_by(year) %>%
+  summarise(log_return_open_volatility = sd(LogReturn_Open)* sqrt(252),
+            log_return_high_volatility = sd(LogReturn_High)* sqrt(252),
+            log_return_low_volatility = sd(LogReturn_Low)* sqrt(252),
+            log_return_close_volatility = sd(LogReturn_Last)* sqrt(252))
+
+# Prikazi rezultate
+TTWO_yearly_volatility
 
 #--------------------------------------------------------------------------------------------------------------
 # Visualizing both returns and raw prices on graphs and charts

@@ -19,20 +19,26 @@ rownames(NWS_descriptive_statistics) <- c("MNWSN","MEDIAN", "SKEWNESS", "KURTOSI
 
 # DNEVNI LOG RETURN (ovo proveriti posto nisam siguran jer sam to radio ranije)
 #prvo moraju da se naprave kolone u dataframe-u
+
+
 NWS$LogReturn_Open<-0
 NWS$LogReturn_High<-0
 NWS$LogReturn_Low<-0
 NWS$LogReturn_Last<-0
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(NWS)){
-  NWS$LogReturn_Open[i]<-log(NWS$Open[i]/NWS$Open[i-1])
-  NWS$LogReturn_High[i]<-log(NWS$High[i]/NWS$High[i-1])
-  NWS$LogReturn_Low[i]<-log(NWS$Low[i]/NWS$Low[i-1])
-  NWS$LogReturn_Last[i]<-log(NWS$Last[i]/NWS$Last[i-1])
+for(i in 1:nrow(NWS)){
+  NWS$LogReturn_Open[i]<-log(NWS$Open[i+1]/NWS$Open[i])
+  NWS$LogReturn_High[i]<-log(NWS$High[i+1]/NWS$High[i])
+  NWS$LogReturn_Low[i]<-log(NWS$Low[i+1]/NWS$Low[i])
+  NWS$LogReturn_Last[i]<-log(NWS$Last[i+1]/NWS$Last[i])
 }
-#CIST PRINOS
-# DNEVNI NET RETURN (cisti prinos)
+
+NWS$LogReturn_Open[2402]<-0
+NWS$LogReturn_High[2402]<-0
+NWS$LogReturn_Low[2402]<-0
+NWS$LogReturn_Last[2402]<-0
+
 
 #prvo moraju da se naprave kolone u dataframe-u
 NWS$NetReturn_Open<-0
@@ -41,13 +47,16 @@ NWS$NetReturn_Low<-0
 NWS$NetReturn_Last<-0
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(NWS)){
-  NWS$NetReturn_Open[i]<-(NWS$Open[i]-NWS$Open[i-1])/NWS$Open[i-1]
-  NWS$NetReturn_High[i]<-(NWS$High[i]-NWS$High[i-1])/NWS$High[i-1]
-  NWS$NetReturn_Low[i]<-(NWS$Low[i]-NWS$Low[i-1])/NWS$Low[i-1]
-  NWS$NetReturn_Last[i]<-(NWS$Last[i]-NWS$Last[i-1])/NWS$Last[i-1]
+for(i in 1:nrow(NWS)){
+  NWS$NetReturn_Open[i]<-(NWS$Open[i+1]-NWS$Open[i])/NWS$Open[i]
+  NWS$NetReturn_High[i]<-(NWS$High[i+1]-NWS$High[i])/NWS$High[i]
+  NWS$NetReturn_Low[i]<-(NWS$Low[i+1]-NWS$Low[i])/NWS$Low[i]
+  NWS$NetReturn_Last[i]<-(NWS$Last[i+1]-NWS$Last[i])/NWS$Last[i]
 }
-
+NWS$NetReturn_Open[2402]<-0
+NWS$NetReturn_High[2402]<-0
+NWS$NetReturn_Low[2402]<-0
+NWS$NetReturn_Last[2402]<-0
 # ///////////////////////////
 
 # grupisanje podataka po nedeljama
@@ -184,11 +193,24 @@ NWS_yearly <- NWS %>%
   summarise(yearly_open = first(Open),
             yearly_high = max(High),
             yearly_low = min(Low),
-            yearly_close = last(Last))
+            yearly_close = last(Last),
+            yearly_first_close=first(Last),
+            yearly_last_close= last(Last))
 
 # Prikazi rezultate
 NWS_yearly
 
+# /////////////////////////
+
+# GODISNJI LOG RETURN
+
+############## NOVO RESENJE (godisnji) ################
+
+NWS_yearly$LogReturn_rtns <- 0
+#-----------------------------------------------------------------------------------
+for(i in 1:nrow(NWS_yearly)){
+  NWS_yearly$LogReturn_rtns[i]<-log(NWS_yearly$yearly_last_close[i]/NWS_yearly$yearly_first_close[i])
+}
 # /////////////////////////
 
 # GODISNJI LOG RETURN
@@ -270,7 +292,22 @@ NWS_yearly_volatility <- NWS %>%
 
 # Prikazi rezultate
 NWS_yearly_volatility
+#------------------------------------------------------------------
+#NOVO
 
+library(dplyr)
+library(lubridate)
+
+# Grupisi po godini i izracunaj podatke
+NWS_yearly_volatility <- NWS %>%
+  group_by(year) %>%
+  summarise(log_return_open_volatility = sd(LogReturn_Open)* sqrt(252),
+            log_return_high_volatility = sd(LogReturn_High)* sqrt(252),
+            log_return_low_volatility = sd(LogReturn_Low)* sqrt(252),
+            log_return_close_volatility = sd(LogReturn_Last)* sqrt(252))
+
+# Prikazi rezultate
+NWS_yearly_volatility
 
 #--------------------------------------------------------------------------------------------------------------
 # Visualizing both returns and raw prices on graphs and charts

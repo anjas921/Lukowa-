@@ -25,14 +25,18 @@ PARA$LogReturn_Low<-0
 PARA$LogReturn_Last<-0
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(PARA)){
-  PARA$LogReturn_Open[i]<-log(PARA$Open[i]/PARA$Open[i-1])
-  PARA$LogReturn_High[i]<-log(PARA$High[i]/PARA$High[i-1])
-  PARA$LogReturn_Low[i]<-log(PARA$Low[i]/PARA$Low[i-1])
-  PARA$LogReturn_Last[i]<-log(PARA$Last[i]/PARA$Last[i-1])
+for(i in 1:nrow(PARA)){
+  PARA$LogReturn_Open[i]<-log(PARA$Open[i+1]/PARA$Open[i])
+  PARA$LogReturn_High[i]<-log(PARA$High[i+1]/PARA$High[i])
+  PARA$LogReturn_Low[i]<-log(PARA$Low[i+1]/PARA$Low[i])
+  PARA$LogReturn_Last[i]<-log(PARA$Last[i+1]/PARA$Last[i])
 }
-#CIST PRINOS
-# DNEVNI NET RETURN (cisti prinos)
+
+PARA$LogReturn_Open[2518]<-0
+PARA$LogReturn_High[2518]<-0
+PARA$LogReturn_Low[2518]<-0
+PARA$LogReturn_Last[2518]<-0
+
 
 #prvo moraju da se naprave kolone u dataframe-u
 PARA$NetReturn_Open<-0
@@ -41,13 +45,16 @@ PARA$NetReturn_Low<-0
 PARA$NetReturn_Last<-0
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(PARA)){
-  PARA$NetReturn_Open[i]<-(PARA$Open[i]-PARA$Open[i-1])/PARA$Open[i-1]
-  PARA$NetReturn_High[i]<-(PARA$High[i]-PARA$High[i-1])/PARA$High[i-1]
-  PARA$NetReturn_Low[i]<-(PARA$Low[i]-PARA$Low[i-1])/PARA$Low[i-1]
-  PARA$NetReturn_Last[i]<-(PARA$Last[i]-PARA$Last[i-1])/PARA$Last[i-1]
+for(i in 1:nrow(PARA)){
+  PARA$NetReturn_Open[i]<-(PARA$Open[i+1]-PARA$Open[i])/PARA$Open[i]
+  PARA$NetReturn_High[i]<-(PARA$High[i+1]-PARA$High[i])/PARA$High[i]
+  PARA$NetReturn_Low[i]<-(PARA$Low[i+1]-PARA$Low[i])/PARA$Low[i]
+  PARA$NetReturn_Last[i]<-(PARA$Last[i+1]-PARA$Last[i])/PARA$Last[i]
 }
-
+PARA$NetReturn_Open[2518]<-0
+PARA$NetReturn_High[2518]<-0
+PARA$NetReturn_Low[2518]<-0
+PARA$NetReturn_Last[2518]<-0
 # ///////////////////////////
 
 # grupisanje podataka po nedeljama
@@ -183,11 +190,24 @@ PARA_yearly <- PARA %>%
   summarise(yearly_open = first(Open),
             yearly_high = max(High),
             yearly_low = min(Low),
-            yearly_close = last(Last))
+            yearly_close = last(Last),
+            yearly_first_close=first(Last),
+            yearly_last_close= last(Last))
 
 # Prikazi rezultate
 PARA_yearly
 
+# /////////////////////////
+
+# GODISNJI LOG RETURN
+
+############## NOVO RESENJE (godisnji) ################
+
+PARA_yearly$LogReturn_rtns <- 0
+#-----------------------------------------------------------------------------------
+for(i in 1:nrow(PARA_yearly)){
+  PARA_yearly$LogReturn_rtns[i]<-log(PARA_yearly$yearly_last_close[i]/PARA_yearly$yearly_first_close[i])
+}
 # /////////////////////////
 
 # GODISNJI LOG RETURN
@@ -269,6 +289,23 @@ PARA_yearly_volatility <- PARA %>%
             high_volatility = sd(High),
             low_volatility = sd(Low),
             close_volatility = sd(Last))
+
+# Prikazi rezultate
+PARA_yearly_volatility
+
+#-----------------------------------------------------------------------------------
+##NOVO
+
+library(dplyr)
+library(lubridate)
+
+# Grupisi po godini i izracunaj podatke
+PARA_yearly_volatility <- PARA %>%
+  group_by(year) %>%
+  summarise(log_return_open_volatility = sd(LogReturn_Open)* sqrt(252),
+            log_return_high_volatility = sd(LogReturn_High)* sqrt(252),
+            log_return_low_volatility = sd(LogReturn_Low)* sqrt(252),
+            log_return_close_volatility = sd(LogReturn_Last)* sqrt(252))
 
 # Prikazi rezultate
 PARA_yearly_volatility

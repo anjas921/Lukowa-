@@ -35,15 +35,19 @@ NASDAQ$LogReturn_Low<-0
 NASDAQ$LogReturn_Last<-0
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(NASDAQ)){
-  NASDAQ$LogReturn_Open[i]<-log(NASDAQ$Open[i]/NASDAQ$Open[i-1])
-  NASDAQ$LogReturn_High[i]<-log(NASDAQ$High[i]/NASDAQ$High[i-1])
-  NASDAQ$LogReturn_Low[i]<-log(NASDAQ$Low[i]/NASDAQ$Low[i-1])
-  NASDAQ$LogReturn_Last[i]<-log(NASDAQ$Last[i]/NASDAQ$Last[i-1])
+for(i in 1:nrow(NASDAQ)){
+  NASDAQ$LogReturn_Open[i]<-log(NASDAQ$Open[i+1]/NASDAQ$Open[i])
+  NASDAQ$LogReturn_High[i]<-log(NASDAQ$High[i+1]/NASDAQ$High[i])
+  NASDAQ$LogReturn_Low[i]<-log(NASDAQ$Low[i+1]/NASDAQ$Low[i])
+  NASDAQ$LogReturn_Last[i]<-log(NASDAQ$Last[i+1]/NASDAQ$Last[i])
 }
 
-#CIST PRINOS
-# DNEVNI NET RETURN (cisti prinos)
+NASDAQ$LogReturn_Open[2517]<-0
+NASDAQ$LogReturn_High[2517]<-0
+NASDAQ$LogReturn_Low[2517]<-0
+NASDAQ$LogReturn_Last[2517]<-0
+
+
 #prvo moraju da se naprave kolone u dataframe-u
 NASDAQ$NetReturn_Open<-0
 NASDAQ$NetReturn_High<-0
@@ -51,12 +55,16 @@ NASDAQ$NetReturn_Low<-0
 NASDAQ$NetReturn_Last<-0
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(NASDAQ)){
-  NASDAQ$NetReturn_Open[i]<-(NASDAQ$Open[i]-NASDAQ$Open[i-1])/NASDAQ$Open[i-1]
-  NASDAQ$NetReturn_High[i]<-(NASDAQ$High[i]-NASDAQ$High[i-1])/NASDAQ$High[i-1]
-  NASDAQ$NetReturn_Low[i]<-(NASDAQ$Low[i]-NASDAQ$Low[i-1])/NASDAQ$Low[i-1]
-  NASDAQ$NetReturn_Last[i]<-(NASDAQ$Last[i]-NASDAQ$Last[i-1])/NASDAQ$Last[i-1]
+for(i in 1:nrow(NASDAQ)){
+  NASDAQ$NetReturn_Open[i]<-(NASDAQ$Open[i+1]-NASDAQ$Open[i])/NASDAQ$Open[i]
+  NASDAQ$NetReturn_High[i]<-(NASDAQ$High[i+1]-NASDAQ$High[i])/NASDAQ$High[i]
+  NASDAQ$NetReturn_Low[i]<-(NASDAQ$Low[i+1]-NASDAQ$Low[i])/NASDAQ$Low[i]
+  NASDAQ$NetReturn_Last[i]<-(NASDAQ$Last[i+1]-NASDAQ$Last[i])/NASDAQ$Last[i]
 }
+NASDAQ$NetReturn_Open[2517]<-0
+NASDAQ$NetReturn_High[2517]<-0
+NASDAQ$NetReturn_Low[2517]<-0
+NASDAQ$NetReturn_Last[2517]<-0
 # ///////////////////////////
 
 # grupisanje podataka po nedeljama
@@ -179,7 +187,7 @@ for(i in 2:nrow(NASDAQ_monthly)){
   NASDAQ_monthly$NetReturn_Last[i]<-(NASDAQ_monthly$monthly_close[i]-NASDAQ_monthly$monthly_close[i-1])/NASDAQ_monthly$monthly_close[i-1]
 }
 
-#GODISNJI CIST PRINOS
+#GONASDAQNJI CIST PRINOS
 #prvo moraju da se naprave kolone u dataframe-u
 NASDAQ_yearly$NetReturn_Open<-0
 NASDAQ_yearly$NetReturn_High<-0
@@ -209,13 +217,14 @@ NASDAQ_yearly$NetReturns_Last_UK[1] <- sd(NASDAQ_yearly$NetReturn_Last)
 library(dplyr)
 library(lubridate)
 
-# Grupisi po godini i mesecu, izracunaj mesece podatke
 NASDAQ_yearly <- NASDAQ %>%
   group_by(year) %>%
   summarise(yearly_open = first(Open),
             yearly_high = max(High),
             yearly_low = min(Low),
-            yearly_close = last(Last))
+            yearly_close = last(Last),
+            yearly_first_close=first(Last),
+            yearly_last_close= last(Last))
 
 # Prikazi rezultate
 NASDAQ_yearly
@@ -223,6 +232,18 @@ NASDAQ_yearly
 # /////////////////////////
 
 # GODISNJI LOG RETURN
+
+############## NOVO RESENJE (godisnji) ################
+
+NASDAQ_yearly$LogReturn_rtns <- 0
+#-----------------------------------------------------------------------------------
+for(i in 1:nrow(NASDAQ_yearly)){
+  NASDAQ_yearly$LogReturn_rtns[i]<-log(NASDAQ_yearly$yearly_last_close[i]/NASDAQ_yearly$yearly_first_close[i])
+}
+
+# /////////////////////////
+
+# GONASDAQNJI LOG RETURN
 
 ############## NOVO RESENJE (godisnji) ################
 
@@ -276,7 +297,23 @@ NASDAQ_yearly_volatility <- NASDAQ %>%
 
 # Prikazi rezultate
 NASDAQ_yearly_volatility
+#--------------------------------------------------------
+#NOVO
 
+library(dplyr)
+library(lubridate)
+
+# Grupisi po godini i izracunaj podatke
+NASDAQ_yearly_volatility <- NASDAQ %>%
+  group_by(year) %>%
+  summarise(log_return_open_volatility = sd(LogReturn_Open)* sqrt(252),
+            log_return_high_volatility = sd(LogReturn_High)* sqrt(252),
+            log_return_low_volatility = sd(LogReturn_Low)* sqrt(252),
+            log_return_close_volatility = sd(LogReturn_Last)* sqrt(252))
+
+# Prikazi rezultate
+NASDAQ_yearly_volatility
+#----------------------
 
 #--------------------------------------------------------------------------------------------------------------
 # Visualizing both returns and raw prices on graphs and charts

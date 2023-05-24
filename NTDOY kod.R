@@ -25,14 +25,18 @@ NTDOY$LogReturn_Low<-0
 NTDOY$LogReturn_Last<-0
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(NTDOY)){
-  NTDOY$LogReturn_Open[i]<-log(NTDOY$Open[i]/NTDOY$Open[i-1])
-  NTDOY$LogReturn_High[i]<-log(NTDOY$High[i]/NTDOY$High[i-1])
-  NTDOY$LogReturn_Low[i]<-log(NTDOY$Low[i]/NTDOY$Low[i-1])
-  NTDOY$LogReturn_Last[i]<-log(NTDOY$Last[i]/NTDOY$Last[i-1])
+for(i in 1:nrow(NTDOY)){
+  NTDOY$LogReturn_Open[i]<-log(NTDOY$Open[i+1]/NTDOY$Open[i])
+  NTDOY$LogReturn_High[i]<-log(NTDOY$High[i+1]/NTDOY$High[i])
+  NTDOY$LogReturn_Low[i]<-log(NTDOY$Low[i+1]/NTDOY$Low[i])
+  NTDOY$LogReturn_Last[i]<-log(NTDOY$Last[i+1]/NTDOY$Last[i])
 }
-#CIST PRINOS
-# DNEVNI NET RETURN (cisti prinos)
+
+NTDOY$LogReturn_Open[2518]<-0
+NTDOY$LogReturn_High[2518]<-0
+NTDOY$LogReturn_Low[2518]<-0
+NTDOY$LogReturn_Last[2518]<-0
+
 
 #prvo moraju da se naprave kolone u dataframe-u
 NTDOY$NetReturn_Open<-0
@@ -41,12 +45,16 @@ NTDOY$NetReturn_Low<-0
 NTDOY$NetReturn_Last<-0
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(NTDOY)){
-  NTDOY$NetReturn_Open[i]<-(NTDOY$Open[i]-NTDOY$Open[i-1])/NTDOY$Open[i-1]
-  NTDOY$NetReturn_High[i]<-(NTDOY$High[i]-NTDOY$High[i-1])/NTDOY$High[i-1]
-  NTDOY$NetReturn_Low[i]<-(NTDOY$Low[i]-NTDOY$Low[i-1])/NTDOY$Low[i-1]
-  NTDOY$NetReturn_Last[i]<-(NTDOY$Last[i]-NTDOY$Last[i-1])/NTDOY$Last[i-1]
+for(i in 1:nrow(NTDOY)){
+  NTDOY$NetReturn_Open[i]<-(NTDOY$Open[i+1]-NTDOY$Open[i])/NTDOY$Open[i]
+  NTDOY$NetReturn_High[i]<-(NTDOY$High[i+1]-NTDOY$High[i])/NTDOY$High[i]
+  NTDOY$NetReturn_Low[i]<-(NTDOY$Low[i+1]-NTDOY$Low[i])/NTDOY$Low[i]
+  NTDOY$NetReturn_Last[i]<-(NTDOY$Last[i+1]-NTDOY$Last[i])/NTDOY$Last[i]
 }
+NTDOY$NetReturn_Open[2518]<-0
+NTDOY$NetReturn_High[2518]<-0
+NTDOY$NetReturn_Low[2518]<-0
+NTDOY$NetReturn_Last[2518]<-0
 
 # ///////////////////////////
 
@@ -184,14 +192,29 @@ NTDOY_yearly <- NTDOY %>%
   summarise(yearly_open = first(Open),
             yearly_high = max(High),
             yearly_low = min(Low),
-            yearly_close = last(Last))
+            yearly_close = last(Last),
+            yearly_first_close=first(Last),
+            yearly_last_close= last(Last))
 
 # Prikazi rezultate
 NTDOY_yearly
 
+
 # /////////////////////////
 
 # GODISNJI LOG RETURN
+
+############## NOVO RESENJE (godisnji) ################
+
+NTDOY_yearly$LogReturn_rtns <- 0
+#-----------------------------------------------------------------------------------
+for(i in 1:nrow(NTDOY_yearly)){
+  NTDOY_yearly$LogReturn_rtns[i]<-log(NTDOY_yearly$yearly_last_close[i]/NTDOY_yearly$yearly_first_close[i])
+}
+
+# /////////////////////////
+
+# GONTDOYNJI LOG RETURN
 
 ############## NOVO RESENJE (godisnji) ################
 
@@ -210,8 +233,8 @@ for(i in 2:nrow(NTDOY_yearly)){
   NTDOY_yearly$LogReturn_Low[i]<-log(NTDOY_yearly$yearly_low[i]/NTDOY_yearly$yearly_low[i-1])
   NTDOY_yearly$LogReturn_Close[i]<-log(NTDOY_yearly$yearly_close[i]/NTDOY_yearly$yearly_close[i-1])
 }
-#GODISNJI CIST PRINOS
-# GODISNJI NET RETURN (cisti prinos)
+#GONTDOYNJI CIST PRINOS
+# GONTDOYNJI NET RETURN (cisti prinos)
 
 #prvo moraju da se naprave kolone u dataframe-u
 NTDOY_yearly$NetReturn_Open<-0
@@ -267,6 +290,22 @@ NTDOY_yearly_volatility <- NTDOY %>%
             high_volatility = sd(High),
             low_volatility = sd(Low),
             close_volatility = sd(Last))
+
+# Prikazi rezultate
+NTDOY_yearly_volatility
+
+#-----------------------
+
+library(dplyr)
+library(lubridate)
+
+# Grupisi po godini i izracunaj podatke
+NTDOY_yearly_volatility <- NTDOY %>%
+  group_by(year) %>%
+  summarise(log_return_open_volatility = sd(LogReturn_Open)* sqrt(252),
+            log_return_high_volatility = sd(LogReturn_High)* sqrt(252),
+            log_return_low_volatility = sd(LogReturn_Low)* sqrt(252),
+            log_return_close_volatility = sd(LogReturn_Last)* sqrt(252))
 
 # Prikazi rezultate
 NTDOY_yearly_volatility

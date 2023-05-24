@@ -25,12 +25,19 @@ DIS$LogReturn_Low<-0
 DIS$LogReturn_Last<-0
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(DIS)){
-  DIS$LogReturn_Open[i]<-log(DIS$Open[i]/DIS$Open[i-1])
-  DIS$LogReturn_High[i]<-log(DIS$High[i]/DIS$High[i-1])
-  DIS$LogReturn_Low[i]<-log(DIS$Low[i]/DIS$Low[i-1])
-  DIS$LogReturn_Last[i]<-log(DIS$Last[i]/DIS$Last[i-1])
+for(i in 1:nrow(DIS)){
+  DIS$LogReturn_Open[i]<-log(DIS$Open[i+1]/DIS$Open[i])
+  DIS$LogReturn_High[i]<-log(DIS$High[i+1]/DIS$High[i])
+  DIS$LogReturn_Low[i]<-log(DIS$Low[i+1]/DIS$Low[i])
+  DIS$LogReturn_Last[i]<-log(DIS$Last[i+1]/DIS$Last[i])
 }
+
+DIS$LogReturn_Open[2518]<-0
+DIS$LogReturn_High[2518]<-0
+DIS$LogReturn_Low[2518]<-0
+DIS$LogReturn_Last[2518]<-0
+
+
 #prvo moraju da se naprave kolone u dataframe-u
 DIS$NetReturn_Open<-0
 DIS$NetReturn_High<-0
@@ -38,12 +45,16 @@ DIS$NetReturn_Low<-0
 DIS$NetReturn_Last<-0
 
 #sad se dodaju vrednosti tim kolonama
-for(i in 2:nrow(DIS)){
-  DIS$NetReturn_Open[i]<-(DIS$Open[i]-DIS$Open[i-1])/DIS$Open[i-1]
-  DIS$NetReturn_High[i]<-(DIS$High[i]-DIS$High[i-1])/DIS$High[i-1]
-  DIS$NetReturn_Low[i]<-(DIS$Low[i]-DIS$Low[i-1])/DIS$Low[i-1]
-  DIS$NetReturn_Last[i]<-(DIS$Last[i]-DIS$Last[i-1])/DIS$Last[i-1]
+for(i in 1:nrow(DIS)){
+  DIS$NetReturn_Open[i]<-(DIS$Open[i+1]-DIS$Open[i])/DIS$Open[i]
+  DIS$NetReturn_High[i]<-(DIS$High[i+1]-DIS$High[i])/DIS$High[i]
+  DIS$NetReturn_Low[i]<-(DIS$Low[i+1]-DIS$Low[i])/DIS$Low[i]
+  DIS$NetReturn_Last[i]<-(DIS$Last[i+1]-DIS$Last[i])/DIS$Last[i]
 }
+DIS$NetReturn_Open[2518]<-0
+DIS$NetReturn_High[2518]<-0
+DIS$NetReturn_Low[2518]<-0
+DIS$NetReturn_Last[2518]<-0
 # ///////////////////////////
 
 # grupisanje podataka po nedeljama
@@ -85,7 +96,7 @@ DIS_weekly$LogReturn_Close<-0
 
 #sad se dodaju vrednosti tim kolonama
 for(i in 2:nrow(DIS_weekly)){
-  DIS_weekly$LogReturn_Open[i]<-log(DIS_weekly$weekly_open[i]/DIS_weekly$weekly_open[i-1])
+  DIS_weekly$LogReturn_Open[i]<-log(DIS_weekly$weekly_open[i]/DIS_weekly$weekly_open[i])
   DIS_weekly$LogReturn_High[i]<-log(DIS_weekly$weekly_high[i]/DIS_weekly$weekly_high[i-1])
   DIS_weekly$LogReturn_Low[i]<-log(DIS_weekly$weekly_low[i]/DIS_weekly$weekly_low[i-1])
   DIS_weekly$LogReturn_Close[i]<-log(DIS_weekly$weekly_close[i]/DIS_weekly$weekly_close[i-1])
@@ -240,7 +251,7 @@ DIS_yearly$NetReturns_Last_UK[1] <- sd(DIS_yearly$NetReturn_Last)
 #DIS<-DIS[,10]
 #install.packages("quantmod")
 library(quantmod)
-
+#sd(daily returns) * sqrt(252)
 DIS<-DIS[,-10]
 DIS_yearly$Volatility_Open <- "/"
 DIS_yearly$Volatility_Open[1] <- sd(DIS_yearly$LogReturn_Open)
@@ -256,16 +267,46 @@ library(dplyr)
 library(lubridate)
 
 # Grupisi po godini i mesecu, izracunaj mesece podatke
+DIS_yearly <- DIS %>%
+  group_by(year) %>%
+  summarise(yearly_open = first(Open),
+            yearly_high = max(High),
+            yearly_low = min(Low),
+            yearly_close = last(Last),
+            yearly_first_close=first(Last),
+            yearly_last_close= last(Last))
+
+# Prikazi rezultate
+DIS_yearly
+
+# /////////////////////////
+
+# GODISNJI LOG RETURN
+
+############## NOVO RESENJE (godisnji) ################
+
+DIS_yearly$LogReturn_rtns <- 0
+#-----------------------------------------------------------------------------------
+for(i in 1:nrow(DIS_yearly)){
+  DIS_yearly$LogReturn_rtns[i]<-log(DIS_yearly$yearly_last_close[i]/DIS_yearly$yearly_first_close[i])
+}
+#NOVO----------------------------------------------------------------------
+
+library(dplyr)
+library(lubridate)
+
+# Grupisi po godini i izracunaj podatke
 DIS_yearly_volatility <- DIS %>%
   group_by(year) %>%
-  summarise(open_volatility = sd(Open),
-            high_volatility = sd(High),
-            low_volatility = sd(Low),
-            close_volatility = sd(Last))
+  summarise(log_return_open_volatility = sd(LogReturn_Open)* sqrt(252),
+            log_return_high_volatility = sd(LogReturn_High)* sqrt(252),
+            log_return_low_volatility = sd(LogReturn_Low)* sqrt(252),
+            log_return_close_volatility = sd(LogReturn_Last)* sqrt(252))
 
 # Prikazi rezultate
 DIS_yearly_volatility
 
+#----------------------------------------------------------------------------
 
 #--------------------------------------------------------------------------------------------------------------
 # Visualizing both returns and raw prices on graphs and charts
